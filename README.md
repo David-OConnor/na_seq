@@ -9,5 +9,14 @@ It includes functions to convert between `&[Nucleotide]` to string and vice-vers
 
 See [the docs](https://docs.rs/na_seq) for details on data structures and functions available.
 
-This library is used by the [PlasCAD](https://github.com/David-OConnor/plascad) plasmid editor.
 
+## Utility functionality
+- Sequence and nucleotide complements
+- Sequence and nucleotide weight
+- GC content
+
+We may add alignment, sequent searches, and other utility features to this in the future.
+
+
+
+This library is used by the [PlasCAD](https://github.com/David-OConnor/plascad) plasmid editor.

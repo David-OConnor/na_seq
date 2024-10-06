@@ -28,7 +28,7 @@ impl Nucleotide {
             b'G' | b'g' => Ok(G),
             b'C' | b'c' => Ok(C),
             _ => Err(io::Error::new(
-                io::ErrorKind::InvalidData,
+                ErrorKind::InvalidData,
                 "Invalid nucleotide",
             )),
         }
