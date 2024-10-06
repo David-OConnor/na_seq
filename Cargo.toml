@@ -1,9 +1,9 @@
 [package]
-name = "seq"
+name = "na_seq"
 version = "0.1.0"
 edition = "2021"
 authors = ["David O'Connor <the_alchemist@fastmail.com>"]
-description = "DNA sequence types and functions"
+description = "DNA and RNA sequence types and functions"
 keywords = ["dna", "primer", "biology", "pcr"]
 categories = [
     "science", "science::bioinformatics",
