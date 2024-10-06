@@ -1,4 +1,4 @@
-use std::io;
+use std::{io, io::ErrorKind};
 
 use bincode::{Decode, Encode};
 use num_enum::TryFromPrimitive;
@@ -159,4 +159,63 @@ pub fn seq_weight(seq: &[Nucleotide]) -> f32 {
 pub fn calc_gc(seq: &[Nucleotide]) -> f32 {
     let num_gc = seq.iter().filter(|&&nt| nt == C || nt == G).count();
     num_gc as f32 / seq.len() as f32
+}
+
+/// A compact binary serialization of our sequence. Useful for file storage.
+/// The first byte is sequence length; we need this, since one of our nucleotides necessarily serializes
+/// to 0b00.
+/// todo: Is this MSB or LSB?
+pub fn serialize_seq_bin(seq: &[Nucleotide]) -> Vec<u8> {
+    let mut result = Vec::new();
+    result.extend(&(seq.len() as u32).to_be_bytes());
+
+    for i in 0..seq.len() / 4 + 1 {
+        let mut val = 0;
+        for j in 0..4 {
+            let ind = i * 4 + j;
+            if ind + 1 > seq.len() {
+                break;
+            }
+            let nt = seq[ind];
+            val |= (nt as u8) << (j * 2);
+        }
+        result.push(val);
+    }
+    result
+}
+
+/// A compact binary deserialization of our sequence. Useful for file storage.
+/// The first byte is sequence length; we need this, since one of our nucleotides necessarily serializes
+/// to 0b00.
+/// todo: Is this MSB or LSB?
+pub fn deser_seq_bin(data: &[u8]) -> io::Result<Seq> {
+    let mut result = Vec::new();
+
+    if data.len() < 4 {
+        return Err(io::Error::new(
+            ErrorKind::InvalidData,
+            "Bin nucleotide sequence is too short.",
+        ));
+    }
+
+    let seq_len = u32::from_be_bytes(data[0..4].try_into().unwrap()) as usize;
+
+    for byte in &data[4..] {
+        for i in 0..4 {
+            // This trimming removes extra 00-serialized nucleotides.
+            if result.len() >= seq_len {
+                break;
+            }
+
+            let bits = (byte >> (2 * i)) & 0b11;
+            result.push(Nucleotide::try_from(bits).map_err(|_| {
+                io::Error::new(
+                    ErrorKind::InvalidData,
+                    format!("Invalid NT serialization: {}, {}", byte, bits),
+                )
+            })?);
+        }
+    }
+
+    Ok(result)
 }
