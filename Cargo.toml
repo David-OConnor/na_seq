@@ -1,0 +1,21 @@
+[package]
+name = "seq"
+version = "0.1.0"
+edition = "2021"
+authors = ["David O'Connor <the_alchemist@fastmail.com>"]
+description = "DNA sequence types and functions"
+keywords = ["dna", "primer", "biology", "pcr"]
+categories = [
+    "science", "science::bioinformatics",
+]
+repository = "https://github.com/David-OConnor/seq"
+documentation = "https://docs.rs/seq"
+readme = "README.md"
+license = "MIT"
+exclude = [".gitignore"]
+
+[dependencies]
+num_enum = "^0.7.3"  # reversing a u8-repr.
+
+# todo: Do we need this?
+bincode = "^2.0.0-rc.3"
