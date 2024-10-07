@@ -15,7 +15,9 @@ See [the docs](https://docs.rs/na_seq) for details on data structures and functi
 - Sequence and nucleotide weight
 - GC content
 
-We may add alignment, sequent searches, and other utility features to this in the future.
+We may add alignment, sequence searches, and other utility features in the future.
+
+Also includes restriction enzyme functionality basics.
 
 
 

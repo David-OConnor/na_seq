@@ -5,6 +5,8 @@ use num_enum::TryFromPrimitive;
 
 use crate::Nucleotide::*;
 
+pub mod restriction_enzyme;
+
 // Index 0: 5' end.
 pub type Seq = Vec<Nucleotide>;
 
@@ -162,7 +164,7 @@ pub fn calc_gc(seq: &[Nucleotide]) -> f32 {
 }
 
 /// A compact binary serialization of our sequence. Useful for file storage.
-/// The first byte is sequence length; we need this, since one of our nucleotides necessarily serializes
+/// The first four bytes is sequence length, big endian; we need this, since one of our nucleotides necessarily serializes
 /// to 0b00.
 /// todo: Is this MSB or LSB?
 pub fn serialize_seq_bin(seq: &[Nucleotide]) -> Vec<u8> {
@@ -185,7 +187,7 @@ pub fn serialize_seq_bin(seq: &[Nucleotide]) -> Vec<u8> {
 }
 
 /// A compact binary deserialization of our sequence. Useful for file storage.
-/// The first byte is sequence length; we need this, since one of our nucleotides necessarily serializes
+/// The first four bytes is sequence length, big endian; we need this, since one of our nucleotides necessarily serializes
 /// to 0b00.
 /// todo: Is this MSB or LSB?
 pub fn deser_seq_bin(data: &[u8]) -> io::Result<Seq> {
