@@ -6,6 +6,7 @@ use num_enum::TryFromPrimitive;
 use crate::Nucleotide::*;
 
 pub mod ligation;
+pub mod re_lib;
 pub mod restriction_enzyme;
 
 // Index 0: 5' end.
