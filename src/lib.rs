@@ -5,6 +5,7 @@ use num_enum::TryFromPrimitive;
 
 use crate::Nucleotide::*;
 
+pub mod ligation;
 pub mod restriction_enzyme;
 
 // Index 0: 5' end.
@@ -29,10 +30,7 @@ impl Nucleotide {
             b'T' | b't' => Ok(T),
             b'G' | b'g' => Ok(G),
             b'C' | b'c' => Ok(C),
-            _ => Err(io::Error::new(
-                ErrorKind::InvalidData,
-                "Invalid nucleotide",
-            )),
+            _ => Err(io::Error::new(ErrorKind::InvalidData, "Invalid nucleotide")),
         }
     }
 
@@ -220,4 +218,16 @@ pub fn deser_seq_bin(data: &[u8]) -> io::Result<Seq> {
     }
 
     Ok(result)
+}
+
+#[derive(Clone, Copy, PartialEq, Encode, Decode)]
+pub enum SeqTopology {
+    Linear,
+    Circular,
+}
+
+impl Default for SeqTopology {
+    fn default() -> Self {
+        Self::Circular
+    }
 }
