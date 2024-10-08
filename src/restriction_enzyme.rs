@@ -153,6 +153,9 @@ impl RestrictionEnzyme {
         result
     }
 
+    // todo: Consider replacing these with a dual-stranded model, instead of
+    // todo modeling overhangs.
+
     /// Find the overhanging NTs 5' of a sequence's top strand.
     /// `seq_segment` must be the same size as, and aligned with the cut sequence.
     pub fn overhang_top_left(&self, seq_segment: &[Nucleotide]) -> Vec<Nucleotide> {
