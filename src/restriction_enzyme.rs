@@ -89,6 +89,17 @@ impl NucleotideGeneral {
     }
 }
 
+pub struct LigationProduct {
+    /// 5' to 3' (both strands; they are in opposite directions.)
+    pub strand_top: Seq,
+    pub strand_bottom: Seq,
+    /// The index, in nucleotides, from the start of the top strand, where the
+    /// bottom strand starts. Example:
+    /// ACTGG  (top)
+    ///    CC  (bottom)   alignment=3.
+    pub alignment: usize,
+}
+
 #[derive(Debug, Clone)]
 pub struct ReMatch {
     pub lib_index: usize,

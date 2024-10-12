@@ -165,7 +165,9 @@ pub fn calc_gc(seq: &[Nucleotide]) -> f32 {
 /// A compact binary serialization of our sequence. Useful for file storage.
 /// The first four bytes is sequence length, big endian; we need this, since one of our nucleotides necessarily serializes
 /// to 0b00.
-/// todo: Is this MSB or LSB?
+///
+/// MSB. Nucleotides are right-to-left in a given byte. Example: A byte containing
+/// nucleotides TCAG is `0b1110_0100`.
 pub fn serialize_seq_bin(seq: &[Nucleotide]) -> Vec<u8> {
     let mut result = Vec::new();
     result.extend(&(seq.len() as u32).to_be_bytes());
