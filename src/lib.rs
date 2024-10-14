@@ -12,6 +12,8 @@ pub mod restriction_enzyme;
 // Index 0: 5' end.
 pub type Seq = Vec<Nucleotide>;
 
+pub struct IndexError {}
+
 /// A DNA nucleotide. The u8 repr is for use with a compact binary format.
 /// This is the same nucleotide mapping as [.2bit format](http://genome.ucsc.edu/FAQ/FAQformat.html#format7).
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug, Encode, Decode, TryFromPrimitive)]
@@ -233,4 +235,22 @@ impl Default for SeqTopology {
     fn default() -> Self {
         Self::Circular
     }
+}
+
+/// Insert a segment of one sequence into another. For example, for cloning.
+/// Note that `insert_loc` uses 1-based indexing.
+pub fn insert_into_seq(
+    seq_vector: &mut Seq,
+    insert: &[Nucleotide],
+    insert_loc: usize,
+) -> Result<(), IndexError> {
+    if insert_loc == 0 || insert_loc > seq_vector.len() {
+        eprintln!("Error: Insert location out of bounds: {insert_loc}");
+        return Err(IndexError {});
+    }
+
+    let insert_i = insert_loc - 1; // 1-based indexing.
+    seq_vector.splice(insert_i..insert_i, insert.iter().cloned());
+
+    Ok(())
 }
