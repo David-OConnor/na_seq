@@ -43,7 +43,7 @@ pub enum NucleotideGeneral {
 
 impl NucleotideGeneral {
     /// Which nucleotides this symbol matches with.
-    pub fn nt_matches(&self) -> Vec<Nucleotide> {
+    fn nt_matches(&self) -> Vec<Nucleotide> {
         match self {
             Self::A => vec![A],
             Self::T => vec![T],
@@ -57,6 +57,10 @@ impl NucleotideGeneral {
             Self::M => vec![A, C],
             Self::K => vec![T, T],
         }
+    }
+
+    pub fn matches(&self, nt: Nucleotide) -> bool {
+        self.nt_matches().contains(&nt)
     }
 
     /// Note: Unlike nt, this is upper case.
@@ -226,21 +230,29 @@ impl RestrictionEnzyme {
 /// todo library are symmetric.
 pub fn find_re_matches(seq: &[Nucleotide], lib: &[RestrictionEnzyme]) -> Vec<ReMatch> {
     let mut result = Vec::new();
+    let seq_len = seq.len();
 
     let mut match_counts = HashMap::new(); // lib index, count
 
     for (lib_index, re) in lib.iter().enumerate() {
-        let seq_len = seq.len();
+        let re_seq_len = re.cut_seq.len();
+
         for i in 0..seq_len {
-            if i + re.cut_seq.len() + 1 >= seq_len {
+            if i + re_seq_len + 1 >= seq_len {
                 continue;
             }
 
+            let mut matches = true;
             // If the RE cut site doesn't match this sequence segment, continue.
-            for (j, nt) in seq[i..i + re.cut_seq.len()].iter().enumerate() {
-                if !re.cut_seq[j].nt_matches().contains(nt) {
-                    continue;
+            for (j, nt) in seq[i..i + re_seq_len].iter().enumerate() {
+                if !re.cut_seq[j].matches(*nt) {
+                    matches = false;
+                    break;
                 }
+            }
+
+            if !matches {
+                continue;
             }
 
             result.push(ReMatch {
