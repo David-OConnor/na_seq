@@ -7,6 +7,8 @@ This small library contains types and functions used for performing operations o
 
 It includes functions to convert between `&[Nucleotide]` to string and vice-versa, and convert to and from u8 integer representations. It includes functions to serialize and deserialize in a compact binary format, with 2 bits per nucleotide.
 
+It also includes Amino Acid types.
+
 See [the docs](https://docs.rs/na_seq) for details on data structures and functions available.
 
 

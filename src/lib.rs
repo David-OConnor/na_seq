@@ -3,8 +3,9 @@ use std::{io, io::ErrorKind};
 use bincode::{Decode, Encode};
 use num_enum::TryFromPrimitive;
 
-use crate::Nucleotide::*;
+use crate::{amino_acids::AminoAcid, Nucleotide::*};
 
+pub mod amino_acids;
 pub mod ligation;
 pub mod re_lib;
 pub mod restriction_enzyme;
@@ -113,6 +114,7 @@ pub fn seq_complement(seq: &[Nucleotide]) -> Seq {
     result
 }
 
+/// Create a nucleotide sequence from a string. (Case insensitive)
 pub fn seq_from_str(str: &str) -> Seq {
     let mut result = Vec::new();
 
@@ -129,12 +131,37 @@ pub fn seq_from_str(str: &str) -> Seq {
     result
 }
 
+/// Create an amino-acid sequence from a string of single-letter identifiers. (Case insensitive)
+pub fn seq_aa_from_str(str: &str) -> Vec<AminoAcid> {
+    let mut result = Vec::new();
+
+    for char in str.chars() {
+        let letter = char.to_string(); // Convert `char` to `String`
+        if let Ok(aa) = AminoAcid::from_ident_single_letter(&letter) {
+            result.push(aa);
+        }
+    }
+
+    result
+}
+
 /// Convert a nucleotide sequence to string.
 pub fn seq_to_str(seq: &[Nucleotide]) -> String {
     let mut result = String::new();
 
     for nt in seq {
         result.push_str(nt.as_str());
+    }
+
+    result
+}
+
+/// Convert a nucleotide sequence to string.
+pub fn seq_aa_to_str(seq: &[AminoAcid]) -> String {
+    let mut result = String::new();
+
+    for aa in seq {
+        result.push_str(&aa.ident_single_letter());
     }
 
     result
