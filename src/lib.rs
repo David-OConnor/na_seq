@@ -172,6 +172,11 @@ pub fn seq_to_letter_bytes(seq: &[Nucleotide]) -> Vec<u8> {
     seq.iter().map(|nt| nt.to_u8_letter()).collect()
 }
 
+/// Convert a string to bytes associated with ASCII letters. For compatibility with external libraries.
+pub fn seq_aa_to_letter_bytes(seq: &[AminoAcid]) -> Vec<u8> {
+    seq.iter().map(|aa| aa.to_u8_letter()).collect()
+}
+
 /// Sequence weight, in Daltons. Assumes single-stranded.
 pub fn seq_weight(seq: &[Nucleotide]) -> f32 {
     let mut result = 0.;

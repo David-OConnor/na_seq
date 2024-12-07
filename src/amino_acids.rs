@@ -102,6 +102,33 @@ impl AminoAcid {
         })
     }
 
+    /// Convert to a byte for the associated single-letter ident.
+    pub fn to_u8_letter(&self) -> u8 {
+        match self {
+            Self::Arg => b'R',
+            Self::His => b'H',
+            Self::Lys => b'K',
+            Self::Asp => b'D',
+            Self::Glu => b'E',
+            Self::Ser => b'S',
+            Self::Thr => b'T',
+            Self::Asn => b'N',
+            Self::Gln => b'Q',
+            Self::Cys => b'C',
+            Self::Sec => b'U',
+            Self::Gly => b'G',
+            Self::Pro => b'P',
+            Self::Ala => b'A',
+            Self::Val => b'V',
+            Self::Ile => b'I',
+            Self::Leu => b'L',
+            Self::Met => b'M',
+            Self::Phe => b'F',
+            Self::Tyr => b'Y',
+            Self::Trp => b'W',
+        }
+    }
+
     /// Used to make displaying a centered letter in a sequence easier; 3 characters.
     pub fn ident_single_letter_offset(&self) -> String {
         format!(" {} ", self.ident_single_letter())
