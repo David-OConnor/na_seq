@@ -12,7 +12,7 @@ use std::{
 };
 
 use crate::{
-    seq_to_str,
+    seq_to_str_lower,
     Nucleotide::{self, A, C, G, T},
     Seq,
 };

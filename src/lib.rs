@@ -3,7 +3,8 @@ use std::{io, io::ErrorKind};
 use bincode::{Decode, Encode};
 use num_enum::TryFromPrimitive;
 
-use crate::{amino_acids::AminoAcid, Nucleotide::*};
+pub use crate::amino_acids::{AaIdent, AminoAcid, CodingResult};
+use crate::Nucleotide::*;
 
 pub mod amino_acids;
 pub mod ligation;
@@ -28,8 +29,8 @@ pub enum Nucleotide {
 
 impl Nucleotide {
     /// For interop with FASTA, GenBank, and SnapGene formats.
-    pub fn from_u8_letter(val_u8: u8) -> io::Result<Self> {
-        match val_u8 {
+    pub fn from_u8(val: u8) -> io::Result<Self> {
+        match val {
             b'A' | b'a' => Ok(A),
             b'T' | b't' => Ok(T),
             b'G' | b'g' => Ok(G),
@@ -38,8 +39,8 @@ impl Nucleotide {
         }
     }
 
-    /// For interop with FASTA, GenBank, and SnapGene formats.
-    pub fn to_u8_letter(&self) -> u8 {
+    /// Returns `b'A'` etc. For interop with FASTA, GenBank, and SnapGene formats.
+    pub fn to_u8_upper(&self) -> u8 {
         match self {
             A => b'A',
             T => b'T',
@@ -48,12 +49,31 @@ impl Nucleotide {
         }
     }
 
-    pub fn as_str(&self) -> &str {
+    /// Returns `b'a'` etc. For interop with FASTA, GenBank, and SnapGene formats.
+    pub fn to_u8_lower(&self) -> u8 {
         match self {
-            A => "a",
-            T => "t",
-            C => "c",
-            G => "g",
+            A => b'a',
+            T => b't',
+            G => b'g',
+            C => b'c',
+        }
+    }
+
+    pub fn to_str_upper(&self) -> String {
+        match self {
+            A => "A".to_owned(),
+            T => "T".to_owned(),
+            C => "C".to_owned(),
+            G => "G".to_owned(),
+        }
+    }
+
+    pub fn to_str_lower(&self) -> String {
+        match self {
+            A => "a".to_owned(),
+            T => "t".to_owned(),
+            C => "c".to_owned(),
+            G => "g".to_owned(),
         }
     }
 
@@ -137,7 +157,7 @@ pub fn seq_aa_from_str(str: &str) -> Vec<AminoAcid> {
 
     for char in str.chars() {
         let letter = char.to_string(); // Convert `char` to `String`
-        if let Ok(aa) = AminoAcid::from_ident_single_letter(&letter) {
+        if let Ok(aa) = AminoAcid::from_str(&letter) {
             result.push(aa);
         }
     }
@@ -146,35 +166,56 @@ pub fn seq_aa_from_str(str: &str) -> Vec<AminoAcid> {
 }
 
 /// Convert a nucleotide sequence to string.
-pub fn seq_to_str(seq: &[Nucleotide]) -> String {
+pub fn seq_to_str_lower(seq: &[Nucleotide]) -> String {
     let mut result = String::new();
 
     for nt in seq {
-        result.push_str(nt.as_str());
+        result.push_str(&nt.to_str_lower());
     }
 
     result
 }
 
 /// Convert a nucleotide sequence to string.
-pub fn seq_aa_to_str(seq: &[AminoAcid]) -> String {
+pub fn seq_to_str_upper(seq: &[Nucleotide]) -> String {
     let mut result = String::new();
 
-    for aa in seq {
-        result.push_str(&aa.ident_single_letter());
+    for nt in seq {
+        result.push_str(&nt.to_str_upper());
     }
 
     result
 }
 
-/// Convert a string to bytes associated with ASCII letters. For compatibility with external libraries.
-pub fn seq_to_letter_bytes(seq: &[Nucleotide]) -> Vec<u8> {
-    seq.iter().map(|nt| nt.to_u8_letter()).collect()
+/// Convert an amino acid sequence to string of single-letter idents.
+pub fn seq_aa_to_str(seq: &[AminoAcid]) -> String {
+    let mut result = String::new();
+
+    for aa in seq {
+        result.push_str(&aa.to_str(AaIdent::OneLetter));
+    }
+
+    result
 }
 
-/// Convert a string to bytes associated with ASCII letters. For compatibility with external libraries.
-pub fn seq_aa_to_letter_bytes(seq: &[AminoAcid]) -> Vec<u8> {
-    seq.iter().map(|aa| aa.to_u8_letter()).collect()
+/// Convert a sequence to bytes associated with UTF-8 letters. For compatibility with external libraries.
+pub fn seq_to_u8_upper(seq: &[Nucleotide]) -> Vec<u8> {
+    seq.iter().map(|nt| nt.to_u8_upper()).collect()
+}
+
+/// Convert a sequence of amino acids to bytes associated with UTF-8 letters. For compatibility with external libraries.
+pub fn seq_to_u8_lower(seq: &[Nucleotide]) -> Vec<u8> {
+    seq.iter().map(|nt| nt.to_u8_lower()).collect()
+}
+
+/// Convert a sequence of amino acids to bytes associated with UTF-8 letters. For compatibility with external libraries.
+pub fn seq_aa_to_u8_upper(seq: &[AminoAcid]) -> Vec<u8> {
+    seq.iter().map(|aa| aa.to_u8_upper()).collect()
+}
+
+/// Convert a string to bytes associated with UTF-8 letters. For compatibility with external libraries.
+pub fn seq_aa_to_u8_lower(seq: &[AminoAcid]) -> Vec<u8> {
+    seq.iter().map(|aa| aa.to_u8_lower()).collect()
 }
 
 /// Sequence weight, in Daltons. Assumes single-stranded.

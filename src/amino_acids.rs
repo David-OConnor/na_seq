@@ -43,67 +43,92 @@ pub enum AminoAcid {
 }
 
 impl AminoAcid {
-    pub fn ident_single_letter(&self) -> String {
-        match self {
-            Self::Arg => "R",
-            Self::His => "H",
-            Self::Lys => "K",
-            Self::Asp => "D",
-            Self::Glu => "E",
-            Self::Ser => "S",
-            Self::Thr => "T",
-            Self::Asn => "N",
-            Self::Gln => "Q",
-            Self::Cys => "C",
-            Self::Sec => "U",
-            Self::Gly => "G",
-            Self::Pro => "P",
-            Self::Ala => "A",
-            Self::Val => "V",
-            Self::Ile => "I",
-            Self::Leu => "L",
-            Self::Met => "M",
-            Self::Phe => "F",
-            Self::Tyr => "Y",
-            Self::Trp => "W",
+    pub fn to_str(&self, ident: AaIdent) -> String {
+        match ident {
+            AaIdent::OneLetter => match self {
+                Self::Arg => "R",
+                Self::His => "H",
+                Self::Lys => "K",
+                Self::Asp => "D",
+                Self::Glu => "E",
+                Self::Ser => "S",
+                Self::Thr => "T",
+                Self::Asn => "N",
+                Self::Gln => "Q",
+                Self::Cys => "C",
+                Self::Sec => "U",
+                Self::Gly => "G",
+                Self::Pro => "P",
+                Self::Ala => "A",
+                Self::Val => "V",
+                Self::Ile => "I",
+                Self::Leu => "L",
+                Self::Met => "M",
+                Self::Phe => "F",
+                Self::Tyr => "Y",
+                Self::Trp => "W",
+            },
+            AaIdent::ThreeLetters => match self {
+                Self::Arg => "Arg",
+                Self::His => "His",
+                Self::Lys => "Lys",
+                Self::Asp => "Asp",
+                Self::Glu => "Glu",
+                Self::Ser => "Ser",
+                Self::Thr => "Thr",
+                Self::Asn => "Asn",
+                Self::Gln => "Gln",
+                Self::Cys => "Cys",
+                Self::Sec => "Sec",
+                Self::Gly => "Gly",
+                Self::Pro => "Pro",
+                Self::Ala => "Ala",
+                Self::Val => "Val",
+                Self::Ile => "Ile",
+                Self::Leu => "Leu",
+                Self::Met => "Met",
+                Self::Phe => "Phe",
+                Self::Tyr => "Tyr",
+                Self::Trp => "Trp",
+            },
         }
         .to_owned()
     }
 
-    pub fn from_ident_single_letter(letter: &str) -> io::Result<Self> {
-        Ok(match letter.to_uppercase().as_ref() {
-            "R" => Self::Arg,
-            "H" => Self::His,
-            "K" => Self::Lys,
-            "D" => Self::Asp,
-            "E" => Self::Glu,
-            "S" => Self::Ser,
-            "T" => Self::Thr,
-            "N" => Self::Asn,
-            "Q" => Self::Gln,
-            "C" => Self::Cys,
-            "U" => Self::Sec,
-            "G" => Self::Gly,
-            "P" => Self::Pro,
-            "A" => Self::Ala,
-            "V" => Self::Val,
-            "I" => Self::Ile,
-            "L" => Self::Leu,
-            "M" => Self::Met,
-            "F" => Self::Phe,
-            "Y" => Self::Tyr,
-            "W" => Self::Trp,
+    pub fn from_str(val: &str) -> io::Result<Self> {
+        Ok(match val.to_uppercase().as_ref() {
+            "R" | "ARG" => Self::Arg,
+            "H" | "HIS" => Self::His,
+            "K" | "LYS" => Self::Lys,
+            "D" | "ASP" => Self::Asp,
+            "E" | "GLU" => Self::Glu,
+            "S" | "SER" => Self::Ser,
+            "T" | "THR" => Self::Thr,
+            "N" | "ASN" => Self::Asn,
+            "Q" | "GLN" => Self::Gln,
+            "C" | "CYS" => Self::Cys,
+            "U" | "SEC" => Self::Sec,
+            "G" | "GLY" => Self::Gly,
+            "P" | "PRO" => Self::Pro,
+            "A" | "ALA" => Self::Ala,
+            "V" | "VAL" => Self::Val,
+            "I" | "ILE" => Self::Ile,
+            "L" | "LEU" => Self::Leu,
+            "M" | "MET" => Self::Met,
+            "F" | "PHE" => Self::Phe,
+            "Y" | "TYR" => Self::Tyr,
+            "W" | "TRP" => Self::Trp,
             _ => {
                 return Err(io::Error::new(
                     io::ErrorKind::InvalidData,
-                    "Invalid amino acid letter",
+                    "Invalid amino acid string provided",
                 ))
             }
         })
     }
 
     /// Convert to a byte for the associated single-letter ident.
-    pub fn to_u8_letter(&self) -> u8 {
+    pub fn to_u8_upper(&self) -> u8 {
         match self {
             Self::Arg => b'R',
             Self::His => b'H',
@@ -129,36 +154,36 @@ impl AminoAcid {
         }
     }
 
-    /// Used to make displaying a centered letter in a sequence easier; 3 characters.
-    pub fn ident_single_letter_offset(&self) -> String {
-        format!(" {} ", self.ident_single_letter())
+    /// Convert to a byte for the associated single-letter ident.
+    pub fn to_u8_lower(&self) -> u8 {
+        match self {
+            Self::Arg => b'r',
+            Self::His => b'h',
+            Self::Lys => b'k',
+            Self::Asp => b'd',
+            Self::Glu => b'e',
+            Self::Ser => b's',
+            Self::Thr => b't',
+            Self::Asn => b'n',
+            Self::Gln => b'q',
+            Self::Cys => b'c',
+            Self::Sec => b'u',
+            Self::Gly => b'g',
+            Self::Pro => b'p',
+            Self::Ala => b'a',
+            Self::Val => b'v',
+            Self::Ile => b'i',
+            Self::Leu => b'l',
+            Self::Met => b'm',
+            Self::Phe => b'f',
+            Self::Tyr => b'y',
+            Self::Trp => b'w',
+        }
     }
 
-    pub fn ident_3_letter(&self) -> String {
-        match self {
-            Self::Arg => "Arg",
-            Self::His => "His",
-            Self::Lys => "Lys",
-            Self::Asp => "Asp",
-            Self::Glu => "Glu",
-            Self::Ser => "Ser",
-            Self::Thr => "Thr",
-            Self::Asn => "Asn",
-            Self::Gln => "Gln",
-            Self::Cys => "Cys",
-            Self::Sec => "Sec",
-            Self::Gly => "Gly",
-            Self::Pro => "Pro",
-            Self::Ala => "Ala",
-            Self::Val => "Val",
-            Self::Ile => "Ile",
-            Self::Leu => "Leu",
-            Self::Met => "Met",
-            Self::Phe => "Phe",
-            Self::Tyr => "Tyr",
-            Self::Trp => "Trp",
-        }
-        .to_owned()
+    /// Used to make displaying a centered letter in a sequence easier; 3 characters.
+    pub fn to_str_offset(&self) -> String {
+        format!(" {} ", self.to_str(AaIdent::OneLetter))
     }
 
     /// Return the molecular weight, in Da.
@@ -292,29 +317,11 @@ impl AminoAcid {
 
 impl fmt::Display for AminoAcid {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let v = match self {
-            Self::Arg => "Arg (R)",
-            Self::His => "His (H)",
-            Self::Lys => "Lys (K)",
-            Self::Asp => "Asp (D)",
-            Self::Glu => "Glu (E)",
-            Self::Ser => "Ser (S)",
-            Self::Thr => "Thr (T)",
-            Self::Asn => "Asn (N)",
-            Self::Gln => "Gln (Q)",
-            Self::Cys => "Cys (C)",
-            Self::Sec => "Sec (U)",
-            Self::Gly => "Gly (G)",
-            Self::Pro => "Pro (P)",
-            Self::Ala => "Ala (A)",
-            Self::Val => "Val (V)",
-            Self::Ile => "Ile (I)",
-            Self::Leu => "Leu (L)",
-            Self::Met => "Met (M)",
-            Self::Phe => "Phe (F)",
-            Self::Tyr => "Tyr (Y)",
-            Self::Trp => "Trp (W)",
-        };
+        let v = format!(
+            "{} ({})",
+            self.to_str(AaIdent::ThreeLetters),
+            self.to_str(AaIdent::OneLetter)
+        );
 
         write!(f, "{}", v)
     }
