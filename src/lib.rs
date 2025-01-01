@@ -1,13 +1,16 @@
 use std::{io, io::ErrorKind};
 
 use bincode::{Decode, Encode};
-use num_enum::TryFromPrimitive;
 
-pub use crate::amino_acids::{AaIdent, AminoAcid, CodingResult};
 use crate::Nucleotide::*;
+pub use crate::{
+    amino_acids::{AaIdent, AminoAcid, CodingResult},
+    nucleotide::{Nucleotide, NucleotideGeneral},
+};
 
 pub mod amino_acids;
 pub mod ligation;
+pub mod nucleotide;
 pub mod re_lib;
 pub mod restriction_enzyme;
 
@@ -15,112 +18,6 @@ pub mod restriction_enzyme;
 pub type Seq = Vec<Nucleotide>;
 
 pub struct IndexError {}
-
-/// A DNA nucleotide. The u8 repr is for use with a compact binary format.
-/// This is the same nucleotide mapping as [.2bit format](http://genome.ucsc.edu/FAQ/FAQformat.html#format7).
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug, Encode, Decode, TryFromPrimitive)]
-#[repr(u8)]
-pub enum Nucleotide {
-    T = 0b00,
-    C = 0b01,
-    A = 0b10,
-    G = 0b11,
-}
-
-impl Nucleotide {
-    /// For interop with FASTA, GenBank, and SnapGene formats.
-    pub fn from_u8(val: u8) -> io::Result<Self> {
-        match val {
-            b'A' | b'a' => Ok(A),
-            b'T' | b't' => Ok(T),
-            b'G' | b'g' => Ok(G),
-            b'C' | b'c' => Ok(C),
-            _ => Err(io::Error::new(ErrorKind::InvalidData, "Invalid nucleotide")),
-        }
-    }
-
-    /// Returns `b'A'` etc. For interop with FASTA, GenBank, and SnapGene formats.
-    pub fn to_u8_upper(&self) -> u8 {
-        match self {
-            A => b'A',
-            T => b'T',
-            G => b'G',
-            C => b'C',
-        }
-    }
-
-    /// Returns `b'a'` etc. For interop with FASTA, GenBank, and SnapGene formats.
-    pub fn to_u8_lower(&self) -> u8 {
-        match self {
-            A => b'a',
-            T => b't',
-            G => b'g',
-            C => b'c',
-        }
-    }
-
-    pub fn to_str_upper(&self) -> String {
-        match self {
-            A => "A".to_owned(),
-            T => "T".to_owned(),
-            C => "C".to_owned(),
-            G => "G".to_owned(),
-        }
-    }
-
-    pub fn to_str_lower(&self) -> String {
-        match self {
-            A => "a".to_owned(),
-            T => "t".to_owned(),
-            C => "c".to_owned(),
-            G => "g".to_owned(),
-        }
-    }
-
-    pub fn complement(self) -> Self {
-        match self {
-            A => T,
-            T => A,
-            G => C,
-            C => G,
-        }
-    }
-
-    /// Molecular weight, in Daltons, in a DNA strand.
-    /// [Weight source: NorthWestern](http://biotools.nubic.northwestern.edu/OligoCalc.html)
-    pub fn weight(&self) -> f32 {
-        match self {
-            A => 313.21,
-            T => 304.2,
-            G => 329.21,
-            C => 289.18,
-        }
-    }
-
-    /// Optical density of a 1mL solution, in a cuvette with 1cm pathlength.
-    /// Result is in nm.
-    /// http://biotools.nubic.northwestern.edu/OligoCalc.html
-    pub fn a_max(&self) -> f32 {
-        match self {
-            A => 259.,
-            T => 267.,
-            G => 253.,
-            C => 271.,
-        }
-    }
-
-    /// Optical density of a 1mL solution, in a cuvette with 1cm pathlength.
-    /// Result is in 1/(Moles x cm)
-    /// http://biotools.nubic.northwestern.edu/OligoCalc.html
-    pub fn molar_density(&self) -> f32 {
-        match self {
-            A => 15_200.,
-            T => 8_400.,
-            G => 12_010.,
-            C => 7_050.,
-        }
-    }
-}
 
 /// Reverse direction, and swap C for G, A for T.
 pub fn seq_complement(seq: &[Nucleotide]) -> Seq {
@@ -157,7 +54,7 @@ pub fn seq_aa_from_str(str: &str) -> Vec<AminoAcid> {
 
     for char in str.chars() {
         let letter = char.to_string(); // Convert `char` to `String`
-        if let Ok(aa) = AminoAcid::from_str(&letter) {
+        if let Ok(aa) = letter.parse::<AminoAcid>() {
             result.push(aa);
         }
     }
@@ -265,7 +162,6 @@ pub fn serialize_seq_bin(seq: &[Nucleotide]) -> Vec<u8> {
 /// A compact binary deserialization of our sequence. Useful for file storage.
 /// The first four bytes is sequence length, big endian; we need this, since one of our nucleotides necessarily serializes
 /// to 0b00.
-/// todo: Is this MSB or LSB?
 pub fn deser_seq_bin(data: &[u8]) -> io::Result<Seq> {
     let mut result = Vec::new();
 

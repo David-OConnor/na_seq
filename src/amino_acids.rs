@@ -1,4 +1,4 @@
-use std::{fmt, io};
+use std::{fmt, io, str::FromStr};
 
 use bincode::{Decode, Encode};
 
@@ -93,38 +93,6 @@ impl AminoAcid {
             },
         }
         .to_owned()
-    }
-
-    pub fn from_str(val: &str) -> io::Result<Self> {
-        Ok(match val.to_uppercase().as_ref() {
-            "R" | "ARG" => Self::Arg,
-            "H" | "HIS" => Self::His,
-            "K" | "LYS" => Self::Lys,
-            "D" | "ASP" => Self::Asp,
-            "E" | "GLU" => Self::Glu,
-            "S" | "SER" => Self::Ser,
-            "T" | "THR" => Self::Thr,
-            "N" | "ASN" => Self::Asn,
-            "Q" | "GLN" => Self::Gln,
-            "C" | "CYS" => Self::Cys,
-            "U" | "SEC" => Self::Sec,
-            "G" | "GLY" => Self::Gly,
-            "P" | "PRO" => Self::Pro,
-            "A" | "ALA" => Self::Ala,
-            "V" | "VAL" => Self::Val,
-            "I" | "ILE" => Self::Ile,
-            "L" | "LEU" => Self::Leu,
-            "M" | "MET" => Self::Met,
-            "F" | "PHE" => Self::Phe,
-            "Y" | "TYR" => Self::Tyr,
-            "W" | "TRP" => Self::Trp,
-            _ => {
-                return Err(io::Error::new(
-                    io::ErrorKind::InvalidData,
-                    "Invalid amino acid string provided",
-                ))
-            }
-        })
     }
 
     /// Convert to a byte for the associated single-letter ident.
@@ -312,6 +280,42 @@ impl AminoAcid {
             [A, A, T] => CodingResult::AminoAcid(Self::Asn),
             _ => unreachable!(), // This the 2-nt pattners we handled above.
         }
+    }
+}
+
+impl FromStr for AminoAcid {
+    type Err = io::Error;
+
+    fn from_str(val: &str) -> Result<Self, Self::Err> {
+        Ok(match val.to_uppercase().as_str() {
+            "R" | "ARG" => Self::Arg,
+            "H" | "HIS" => Self::His,
+            "K" | "LYS" => Self::Lys,
+            "D" | "ASP" => Self::Asp,
+            "E" | "GLU" => Self::Glu,
+            "S" | "SER" => Self::Ser,
+            "T" | "THR" => Self::Thr,
+            "N" | "ASN" => Self::Asn,
+            "Q" | "GLN" => Self::Gln,
+            "C" | "CYS" => Self::Cys,
+            "U" | "SEC" => Self::Sec,
+            "G" | "GLY" => Self::Gly,
+            "P" | "PRO" => Self::Pro,
+            "A" | "ALA" => Self::Ala,
+            "V" | "VAL" => Self::Val,
+            "I" | "ILE" => Self::Ile,
+            "L" | "LEU" => Self::Leu,
+            "M" | "MET" => Self::Met,
+            "F" | "PHE" => Self::Phe,
+            "Y" | "TYR" => Self::Tyr,
+            "W" | "TRP" => Self::Trp,
+            _ => {
+                return Err(io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    "Invalid amino acid string provided",
+                ))
+            }
+        })
     }
 }
 

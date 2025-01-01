@@ -7,91 +7,11 @@
 //! exact NTs.
 
 use std::{
-    collections::HashMap,
+    collections::{hash_map::Entry, HashMap},
     hash::{Hash, Hasher},
 };
 
-use crate::{
-    seq_to_str_lower,
-    Nucleotide::{self, A, C, G, T},
-    Seq,
-};
-
-/// Used to describe RE sequences. Unlike `Nucleotide`, this includes conventional symbols that represent
-/// various "either" combinations of nucleotides.
-#[derive(Clone, Copy, PartialEq, Eq)]
-pub enum NucleotideGeneral {
-    A,
-    T,
-    C,
-    G,
-    /// Any
-    N,
-    /// A or T
-    W,
-    /// C or G
-    S,
-    /// Pyrimidines: C or T
-    Y,
-    /// Purines: A or G
-    R,
-    /// A or C
-    M,
-    /// G or T
-    K,
-}
-
-impl NucleotideGeneral {
-    /// Which nucleotides this symbol matches with.
-    fn nt_matches(&self) -> Vec<Nucleotide> {
-        match self {
-            Self::A => vec![A],
-            Self::T => vec![T],
-            Self::C => vec![C],
-            Self::G => vec![G],
-            Self::N => vec![A, C, T, G],
-            Self::W => vec![A, T],
-            Self::S => vec![C, G],
-            Self::Y => vec![C, T],
-            Self::R => vec![A, G],
-            Self::M => vec![A, C],
-            Self::K => vec![T, T],
-        }
-    }
-
-    pub fn matches(&self, nt: Nucleotide) -> bool {
-        self.nt_matches().contains(&nt)
-    }
-
-    /// Note: Unlike nt, this is upper case.
-    pub fn as_str(&self) -> &str {
-        // todo: Upper?
-        match self {
-            // Self::A => "a",
-            // Self::T => "t",
-            // Self::C => "c",
-            // Self::G => "g",
-            // Self::N => "n",
-            // Self::W => "w",
-            // Self::S => "s",
-            // Self::Y => "y",
-            // Self::R => "r",
-            // Self::M => "m",
-            // Self::K => "k",
-            Self::A => "A",
-            Self::T => "T",
-            Self::C => "C",
-            Self::G => "G",
-            Self::N => "N",
-            Self::W => "W",
-            Self::S => "S",
-            Self::Y => "Y",
-            Self::R => "R",
-            Self::M => "M",
-            Self::K => "K",
-        }
-    }
-}
+use crate::{Nucleotide, NucleotideGeneral, Seq};
 
 pub struct LigationProduct {
     /// 5' to 3' (both strands; they are in opposite directions.)
@@ -154,7 +74,7 @@ impl RestrictionEnzyme {
 
     /// A depiction of where to cut.
     pub fn cut_depiction(&self) -> String {
-        let mut nt_chars = seq_general_to_str(&self.cut_seq);
+        let nt_chars = seq_general_to_str(&self.cut_seq);
 
         let mut result = String::new();
 
@@ -262,10 +182,10 @@ pub fn find_re_matches(seq: &[Nucleotide], lib: &[RestrictionEnzyme]) -> Vec<ReM
                 match_count: 0,   // Updated below.
             });
 
-            if match_counts.contains_key(&lib_index) {
-                *match_counts.get_mut(&lib_index).unwrap() += 1;
+            if let Entry::Vacant(e) = match_counts.entry(lib_index) {
+                e.insert(1);
             } else {
-                match_counts.insert(lib_index, 1);
+                *match_counts.get_mut(&lib_index).unwrap() += 1;
             }
         }
     }
@@ -283,7 +203,7 @@ pub fn seq_general_to_str(seq: &[NucleotideGeneral]) -> String {
     let mut result = String::new();
 
     for nt in seq {
-        result.push_str(nt.as_str());
+        result.push_str(&nt.to_str_upper());
     }
 
     result

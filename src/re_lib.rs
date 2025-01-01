@@ -1,8 +1,8 @@
 //! This module loads a library of Restriction enzymes.
 
-use crate::restriction_enzyme::{
-    NucleotideGeneral::{A, C, G, T},
-    RestrictionEnzyme,
+use crate::{
+    nucleotide::NucleotideGeneral::{A, C, G, T},
+    restriction_enzyme::RestrictionEnzyme,
 };
 
 /// Load a set of common Restriction enzymes. Call this at program start, to load into a state field.

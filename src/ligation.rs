@@ -36,7 +36,7 @@ pub fn digest(
         }
         let re = &re_lib[re_match.lib_index];
 
-        if !selected.contains(&re) {
+        if !selected.contains(re) {
             continue;
         }
 
@@ -51,9 +51,7 @@ pub fn digest(
     let mut cuts_i = 0;
     let mut current_fragment = Vec::new();
 
-    for seq_i in cut.0..seq.len() {
-        let nt = seq[seq_i];
-
+    for (seq_i, nt) in seq.iter().enumerate().skip(cut.0) {
         if seq_i == cut.0 {
             if !current_fragment.is_empty() {
                 result.push(LigationFragment {
@@ -71,15 +69,14 @@ pub fn digest(
             }
             cut = &cuts[cuts_i];
         }
-        current_fragment.push(nt);
+        current_fragment.push(*nt);
     }
 
     match topology {
         SeqTopology::Circular => {
             // Create the final fragment, between the last and first cut sites.
-            for seq_i in 0..cuts[0].0 {
-                let nt = seq[seq_i];
-                current_fragment.push(nt);
+            for (seq_i, nt) in seq.iter().enumerate().take(cuts[0].0) {
+                current_fragment.push(*nt);
 
                 if seq_i == cuts[0].0 {
                     break;
@@ -172,7 +169,7 @@ pub fn find_common_res<'a>(
             }
 
             if !result.contains(&re) {
-                result.push(&re);
+                result.push(re);
             }
         }
     }

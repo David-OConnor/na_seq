@@ -17,6 +17,7 @@ Also includes restriction enzyme and ligation basics.
 - Sequence and nucleotide complements
 - Sequence and nucleotide weight
 - GC content
+- A small restriction enzyme library
 
 
 We may add Sequence searches, and other utility features in the future.
