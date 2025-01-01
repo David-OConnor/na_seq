@@ -17,16 +17,36 @@ pub enum Nucleotide {
     G = 0b11,
 }
 
+// todo: Conflict here with TryFromPrimitive, which uses the 2-bit u8 repr.
+// impl TryFrom<u8> for Nucleotide {
+//     type Error = io::Error;
+//
+//     fn try_from(val: u8) -> Result<Self, Self::Error> {
+//         match val {
+//             b'A' | b'a' => Ok(A),
+//             b'T' | b't' => Ok(T),
+//             b'G' | b'g' => Ok(G),
+//             b'C' | b'c' => Ok(C),
+//             _ => Err(io::Error::new(ErrorKind::InvalidData, "Invalid nucleotide")),
+//         }
+//     }
+// }
+
 impl Nucleotide {
     /// E.g. For interop with FASTA, GenBank, and SnapGene formats.
-    pub fn from_u8(val: u8) -> io::Result<Self> {
-        match val {
-            b'A' | b'a' => Ok(A),
-            b'T' | b't' => Ok(T),
-            b'G' | b'g' => Ok(G),
-            b'C' | b'c' => Ok(C),
-            _ => Err(io::Error::new(ErrorKind::InvalidData, "Invalid nucleotide")),
-        }
+    pub fn from_u8_letter(val: u8) -> io::Result<Self> {
+        Ok(match val {
+            b'A' | b'a' => A,
+            b'T' | b't' => T,
+            b'G' | b'g' => G,
+            b'C' | b'c' => C,
+            _ => {
+                return Err(io::Error::new(
+                    ErrorKind::InvalidData,
+                    "Invalid nucleotide letter",
+                ))
+            }
+        })
     }
 
     /// Returns `b'A'` etc. For interop with FASTA, GenBank, and SnapGene formats.
@@ -113,35 +133,81 @@ impl Nucleotide {
 }
 
 /// This includes both normal nucleotides, and "either" combinations of nucleotides.
-#[derive(Clone, Copy, PartialEq, Eq)]
+/// The u8 repr is for use with a binary format.
+#[derive(Clone, Copy, PartialEq, Eq, TryFromPrimitive)]
+#[repr(u8)]
 pub enum NucleotideGeneral {
-    A,
-    T,
-    C,
-    G,
+    T = 0,
+    C = 1,
+    A = 2,
+    G = 3,
     /// Any
-    N,
+    N = 4,
     /// A or T
-    W,
+    W = 5,
     /// C or G
-    S,
+    S = 6,
     /// Pyrimidines: C or T
-    Y,
+    Y = 7,
     /// Purines: A or G
-    R,
+    R = 8,
     /// A or C
-    M,
+    M = 9,
     /// G or T
-    K,
+    K = 10,
 }
 
+// todo: Conflict here with TryFromPrimitive, which uses the 2-bit u8 repr.
+// impl TryFrom<u8> for NucleotideGeneral {
+//     type Error = io::Error;
+//
+//     fn try_from(val: u8) -> Result<Self, Self::Error> {
+// Ok(match val {
+// b'T' | b't' => Self::T,
+// b'C' | b'c' => Self::C,
+// b'A' | b'a' => Self::A,
+// b'G' | b'g' => Self::G,
+// b'N' | b'n' => Self::N,
+// b'W' | b'w' => Self::W,
+// b'S' | b's' => Self::S,
+// b'Y' | b'y' => Self::Y,
+// b'R' | b'r' => Self::R,
+// b'M' | b'm' => Self::M,
+// b'K' | b'k' => Self::K,
+// _ => return Err(io::Error::new(ErrorKind::InvalidData, "Invalid nucleotide letter")),
+// })
+//     }
+// }
+
 impl NucleotideGeneral {
+    pub fn from_u8_letter(val: u8) -> io::Result<Self> {
+        Ok(match val {
+            b'T' | b't' => Self::T,
+            b'C' | b'c' => Self::C,
+            b'A' | b'a' => Self::A,
+            b'G' | b'g' => Self::G,
+            b'N' | b'n' => Self::N,
+            b'W' | b'w' => Self::W,
+            b'S' | b's' => Self::S,
+            b'Y' | b'y' => Self::Y,
+            b'R' | b'r' => Self::R,
+            b'M' | b'm' => Self::M,
+            b'K' | b'k' => Self::K,
+            _ => {
+                return Err(io::Error::new(
+                    ErrorKind::InvalidData,
+                    "Invalid nucleotide letter",
+                ))
+            }
+        })
+    }
+
     /// Which nucleotides this symbol matches with.
     fn nt_matches(&self) -> Vec<Nucleotide> {
         match self {
-            Self::A => vec![A],
             Self::T => vec![T],
             Self::C => vec![C],
+            Self::A => vec![A],
             Self::G => vec![G],
             Self::N => vec![A, C, T, G],
             Self::W => vec![A, T],
@@ -157,28 +223,28 @@ impl NucleotideGeneral {
         self.nt_matches().contains(&nt)
     }
 
-    pub fn from_u8(val: u8) -> io::Result<Self> {
-        match val {
-            b'A' | b'a' => Ok(Self::A),
-            b'T' | b't' => Ok(Self::T),
-            b'G' | b'g' => Ok(Self::G),
-            b'C' | b'c' => Ok(Self::C),
-            b'N' | b'n' => Ok(Self::N),
-            b'W' | b'w' => Ok(Self::W),
-            b'S' | b's' => Ok(Self::S),
-            b'Y' | b'y' => Ok(Self::Y),
-            b'R' | b'r' => Ok(Self::T),
-            b'M' | b'm' => Ok(Self::M),
-            b'K' | b'k' => Ok(Self::K),
-            _ => Err(io::Error::new(ErrorKind::InvalidData, "Invalid nucleotide")),
-        }
-    }
+    // pub fn from_u8(val: u8) -> io::Result<Self> {
+    //     Ok(match val {
+    //         b'T' | b't' => Self::T,
+    //         b'C' | b'c' => Self::C,
+    //         b'A' | b'a' => Self::A,
+    //         b'G' | b'g' => Self::G,
+    //         b'N' | b'n' => Self::N,
+    //         b'W' | b'w' => Self::W,
+    //         b'S' | b's' => Self::S,
+    //         b'Y' | b'y' => Self::Y,
+    //         b'R' | b'r' => Self::T,
+    //         b'M' | b'm' => Self::M,
+    //         b'K' | b'k' => Self::K,
+    //         _ => return Err(io::Error::new(ErrorKind::InvalidData, "Invalid nucleotide")),
+    //     })
+    // }
 
     pub fn to_u8_lower(&self) -> u8 {
         match self {
-            Self::A => b'a',
             Self::T => b't',
             Self::C => b'c',
+            Self::A => b'a',
             Self::G => b'g',
             Self::N => b'n',
             Self::W => b'w',
@@ -193,9 +259,9 @@ impl NucleotideGeneral {
 
     pub fn to_u8_upper(&self) -> u8 {
         match self {
-            Self::A => b'A',
             Self::T => b'T',
             Self::C => b'C',
+            Self::A => b'A',
             Self::G => b'G',
             Self::N => b'N',
             Self::W => b'W',
@@ -210,9 +276,9 @@ impl NucleotideGeneral {
 
     pub fn to_str_lower(&self) -> String {
         match self {
-            Self::A => "a",
             Self::T => "t",
             Self::C => "c",
+            Self::A => "a",
             Self::G => "g",
             Self::N => "n",
             Self::W => "w",

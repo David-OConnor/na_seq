@@ -6,6 +6,7 @@ use crate::Nucleotide::*;
 pub use crate::{
     amino_acids::{AaIdent, AminoAcid, CodingResult},
     nucleotide::{Nucleotide, NucleotideGeneral},
+    restriction_enzyme::RestrictionEnzyme,
 };
 
 pub mod amino_acids;
