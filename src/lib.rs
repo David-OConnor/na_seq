@@ -195,7 +195,7 @@ pub fn deser_seq_bin(data: &[u8]) -> io::Result<Seq> {
     Ok(result)
 }
 
-#[derive(Clone, Copy, PartialEq, Encode, Decode)]
+#[derive(Clone, Copy, PartialEq, Debug, Encode, Decode)]
 pub enum SeqTopology {
     Linear,
     Circular,

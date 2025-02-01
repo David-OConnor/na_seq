@@ -215,7 +215,7 @@ impl NucleotideGeneral {
             Self::Y => vec![C, T],
             Self::R => vec![A, G],
             Self::M => vec![A, C],
-            Self::K => vec![T, T],
+            Self::K => vec![G, T],
         }
     }
 

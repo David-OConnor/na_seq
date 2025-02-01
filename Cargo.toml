@@ -1,6 +1,6 @@
 [package]
 name = "na_seq"
-version = "0.2.5"
+version = "0.2.6"
 edition = "2021"
 authors = ["David O'Connor <the_alchemist@fastmail.com>"]
 description = "DNA and RNA sequence types and functions"

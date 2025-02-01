@@ -4,20 +4,20 @@ use bincode::{Decode, Encode};
 
 use crate::{Nucleotide, Nucleotide::*};
 
-#[derive(Clone, Copy, PartialEq, Encode, Decode)]
+#[derive(Clone, Copy, PartialEq, Debug, Encode, Decode)]
 pub enum AaIdent {
     OneLetter,
     ThreeLetters,
 }
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub enum CodingResult {
     AminoAcid(AminoAcid),
     StopCodon,
 }
 
 /// This struct and its methods are largely copied from the `peptide` project.
-#[derive(Clone, Copy, PartialEq, Encode, Decode)]
+#[derive(Clone, Copy, PartialEq, Debug, Encode, Decode)]
 pub enum AminoAcid {
     Arg,
     His,
