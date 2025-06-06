@@ -5,11 +5,13 @@ use bincode::{Decode, Encode};
 use crate::Nucleotide::*;
 pub use crate::{
     amino_acids::{AaIdent, AminoAcid, CodingResult},
+    element::Element,
     nucleotide::{Nucleotide, NucleotideGeneral},
     restriction_enzyme::RestrictionEnzyme,
 };
 
 pub mod amino_acids;
+pub mod element;
 pub mod ligation;
 pub mod nucleotide;
 pub mod re_lib;

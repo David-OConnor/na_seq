@@ -16,6 +16,16 @@ pub enum CodingResult {
     StopCodon,
 }
 
+#[derive(Clone, Copy, PartialEq)]
+pub enum AaCategory {
+    Hydrophobic,
+    // Neutral, // todo: Rem? Currently a placeholder for
+    // Hydrophilic,
+    Acidic,
+    Basic,
+    Polar,
+}
+
 /// This struct and its methods are largely copied from the `peptide` project.
 #[derive(Clone, Copy, PartialEq, Debug, Encode, Decode)]
 pub enum AminoAcid {
@@ -281,6 +291,32 @@ impl AminoAcid {
             _ => unreachable!(), // This the 2-nt pattners we handled above.
         }
     }
+
+    pub fn category(&self) -> AaCategory {
+        match self {
+            Self::Arg => AaCategory::Basic,
+            Self::His => AaCategory::Basic,
+            Self::Lys => AaCategory::Basic,
+            Self::Asp => AaCategory::Acidic,
+            Self::Glu => AaCategory::Acidic,
+            Self::Ser => AaCategory::Polar, // is polar equiv to hydrophilic?
+            Self::Thr => AaCategory::Polar,
+            Self::Asn => AaCategory::Polar,
+            Self::Gln => AaCategory::Polar,
+            Self::Cys => AaCategory::Polar,
+            Self::Sec => AaCategory::Polar, // todo: unknown for now. placeholder
+            Self::Gly => AaCategory::Hydrophobic,
+            Self::Pro => AaCategory::Hydrophobic,
+            Self::Ala => AaCategory::Hydrophobic,
+            Self::Val => AaCategory::Hydrophobic,
+            Self::Ile => AaCategory::Hydrophobic,
+            Self::Leu => AaCategory::Hydrophobic,
+            Self::Met => AaCategory::Hydrophobic,
+            Self::Phe => AaCategory::Hydrophobic,
+            Self::Tyr => AaCategory::Polar,
+            Self::Trp => AaCategory::Hydrophobic, // Maybe no hydro. Mayb epolar or amphipathic?
+        }
+    }
 }
 
 impl FromStr for AminoAcid {
@@ -313,7 +349,7 @@ impl FromStr for AminoAcid {
                 return Err(io::Error::new(
                     io::ErrorKind::InvalidData,
                     "Invalid amino acid string provided",
-                ))
+                ));
             }
         })
     }

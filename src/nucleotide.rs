@@ -2,9 +2,9 @@
 
 use std::{io, io::ErrorKind};
 
+use Nucleotide::*;
 use bincode::{Decode, Encode};
 use num_enum::TryFromPrimitive;
-use Nucleotide::*;
 
 /// A DNA nucleotide. The u8 repr is for use with a compact binary format.
 /// This is the same nucleotide mapping as [.2bit format](http://genome.ucsc.edu/FAQ/FAQformat.html#format7).
@@ -44,7 +44,7 @@ impl Nucleotide {
                 return Err(io::Error::new(
                     ErrorKind::InvalidData,
                     "Invalid nucleotide letter",
-                ))
+                ));
             }
         })
     }
@@ -197,7 +197,7 @@ impl NucleotideGeneral {
                 return Err(io::Error::new(
                     ErrorKind::InvalidData,
                     "Invalid nucleotide letter",
-                ))
+                ));
             }
         })
     }

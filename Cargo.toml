@@ -1,12 +1,16 @@
 [package]
 name = "na_seq"
-version = "0.2.7"
-edition = "2021"
+version = "0.2.8"
+edition = "2024"
 authors = ["David O'Connor <the_alchemist@fastmail.com>"]
-description = "DNA and RNA sequence types and functions"
+description = "DNA, RNA, and amino acid sequence types and functions"
 keywords = ["dna", "primer", "biology", "pcr"]
 categories = [
-    "science", "science::bioinformatics",
+    "science",
+    "science::bioinformatics",
+    "science::bioinformatics::genomics",
+    "science::bioinformatics::proteomics",
+    "science::bioinformatics::sequence-analysis",
 ]
 repository = "https://github.com/David-OConnor/seq"
 documentation = "https://docs.rs/seq"
@@ -14,8 +18,8 @@ readme = "README.md"
 license = "MIT"
 exclude = [".gitignore"]
 
-[dependencies]
-num_enum = "^0.7.3"  # reversing a u8-repr.
 
-# todo: Do we need this?
-bincode = "^2.0.0-rc.3"
+[dependencies]
+num_enum = "0.7.3"  # reversing a u8-repr.
+
+bincode = "2.0.1"

@@ -2,8 +2,8 @@
 //! combine or otherwise edit DNA segments.
 
 use crate::{
-    restriction_enzyme::{ReMatch, RestrictionEnzyme},
     Nucleotide, Seq, SeqTopology,
+    restriction_enzyme::{ReMatch, RestrictionEnzyme},
 };
 
 pub struct LigationFragment {
