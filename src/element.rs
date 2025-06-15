@@ -31,6 +31,7 @@ pub enum Element {
     Tellurium,
     Selenium,
     Bromine,
+    Rubidium,
     Other,
 }
 
@@ -63,6 +64,7 @@ impl Element {
             Tellurium => 2, // can also be 4 or 6, pick 2
             Selenium => 2,  // can also be 4 or 6, pick 2
             Bromine => 7,
+            Rubidium => 1,
             Other => 0, // default to 0 for unknown or unhandled elements
         }
     }
@@ -131,6 +133,7 @@ impl Element {
             "TE" => Ok(Tellurium),
             "SE" => Ok(Selenium),
             "BR" => Ok(Bromine),
+            "RU" => Ok(Rubidium),
             // todo: Fill in if you need, or remove this fn.
             _ => Err(io::Error::new(
                 ErrorKind::InvalidData,
@@ -167,6 +170,7 @@ impl Element {
             Tellurium => "Te".into(),
             Selenium => "Se".into(),
             Bromine => "Br".into(),
+            Rubidium => "Ru".into(),
             Other => "X".into(),
         }
     }
@@ -200,6 +204,7 @@ impl Element {
             Tellurium => (0.831, 0.478, 0.),
             Selenium => (1.0, 0.631, 0.),
             Bromine => (1.0, 0.99, 0.),
+            Rubidium => (0.439, 0.180, 0.690),
             Other => (5., 5., 5.),
         }
     }
@@ -236,6 +241,7 @@ impl Element {
             Tellurium  => 1.38,
             Selenium   => 1.20,
             Bromine  => 1.14, // 1.14 - 1.20
+            Rubidium  => 2.20,
             Other      => 0.00,
         }
     }
@@ -272,6 +278,7 @@ impl Element {
             Tellurium  => 2.06,
             Selenium   => 1.90,
             Bromine   => 1.85,
+            Rubidium   => 3.21,
             Other      => 0.0,
         }
     }
@@ -304,7 +311,42 @@ impl Element {
             Tellurium => 52,
             Selenium => 34,
             Bromine => 35,
+            Rubidium => 37,
             Other => 20, // fallback
+        }
+    }
+
+    /// Standard atomic weight (in atomic mass units) for each element.
+    pub fn atomic_weight(&self) -> f32 {
+        match self {
+            Hydrogen   => 1.008,
+            Carbon     => 12.011,
+            Oxygen     => 15.999,
+            Nitrogen   => 14.007,
+            Fluorine   => 18.998,
+            Sulfur     => 32.06,
+            Phosphorus => 30.974,
+            Iron       => 55.845,
+            Copper     => 63.546,
+            Calcium    => 40.078,
+            Potassium  => 39.098,
+            Aluminum   => 26.982,
+            Lead       => 207.2,
+            Gold       => 196.967,
+            Silver     => 107.8682,
+            Mercury    => 200.592,
+            Tin        => 118.71,
+            Zinc       => 65.38,
+            Magnesium  => 24.305,
+            Manganese  => 54.938,
+            Iodine     => 126.90,
+            Chlorine   => 35.45,
+            Tungsten   => 183.84,
+            Tellurium  => 127.60,
+            Selenium   => 78.971,
+            Bromine    => 79.904,
+            Rubidium   => 85.468,
+            Other      => 0.0,   // fallback for unknowns
         }
     }
 
