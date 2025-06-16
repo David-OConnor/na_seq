@@ -2,6 +2,8 @@ use std::{io, io::ErrorKind};
 use std::collections::HashMap;
 use Element::*;
 
+pub type LjTable = HashMap<(Element, Element), (f32, f32)>;
+
 #[derive(Clone, Copy, PartialEq, Debug, Default, Hash, Eq)]
 pub enum Element {
     Hydrogen,
@@ -389,18 +391,25 @@ fn init_element_lj_data() -> HashMap<Element, (f32, f32)> {
     result.insert(Sulfur, (3.60, 1.20));
     result.insert(Fluorine, (3.00, 0.20));
     result.insert(Chlorine, (3.40, 1.00));
+    result.insert(Phosphorus, (3.60, 0.85));
+    result.insert(Zinc,       (2.78, 0.40));
+    result.insert(Copper,     (2.80, 0.40));
+    result.insert(Iron,       (4.88, 0.80));
+    result.insert(Magnesium,  (3.46, 0.55));
+    result.insert(Manganese,  (4.00, 0.70));
+    result.insert(Calcium,    (4.62, 0.50));
 
     result
 }
 
 /// Note: Order invariant; insert one for each element pair.
-pub fn init_lj_lut() -> HashMap<(Element, Element), (f32, f32)> {
+pub fn init_lj_lut() -> LjTable {
     let mut result = HashMap::new();
 
     let base = init_element_lj_data();
 
     let els = vec![
-        Carbon, Hydrogen, Nitrogen, Oxygen, Sulfur, Fluorine, Chlorine,
+        Carbon, Hydrogen, Nitrogen, Oxygen, Sulfur, Fluorine, Chlorine, Phosphorus
     ];
 
     for el_0 in &els {
