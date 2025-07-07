@@ -398,6 +398,7 @@ fn init_element_lj_data() -> HashMap<Element, (f32, f32)> {
     result.insert(Magnesium,  (3.46, 0.55));
     result.insert(Manganese,  (4.00, 0.70));
     result.insert(Calcium,    (4.62, 0.50));
+    result.insert(Rubidium,   (4.88, 0.35));
 
     result
 }
@@ -408,9 +409,7 @@ pub fn init_lj_lut() -> LjTable {
 
     let base = init_element_lj_data();
 
-    let els = vec![
-        Carbon, Hydrogen, Nitrogen, Oxygen, Sulfur, Fluorine, Chlorine, Phosphorus
-    ];
+    let els: Vec<_> = base.keys().map(|el| *el).collect();
 
     for el_0 in &els {
         // Retrieve single-element data for el_0
