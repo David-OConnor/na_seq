@@ -1,5 +1,5 @@
-use std::{io, io::ErrorKind};
-use std::collections::HashMap;
+use std::{collections::HashMap, io, io::ErrorKind};
+
 use Element::*;
 
 pub type LjTable = HashMap<(Element, Element), (f32, f32)>;
@@ -321,34 +321,34 @@ impl Element {
     /// Standard atomic weight (in atomic mass units) for each element.
     pub fn atomic_weight(&self) -> f32 {
         match self {
-            Hydrogen   => 1.008,
-            Carbon     => 12.011,
-            Oxygen     => 15.999,
-            Nitrogen   => 14.007,
-            Fluorine   => 18.998,
-            Sulfur     => 32.06,
+            Hydrogen => 1.008,
+            Carbon => 12.011,
+            Oxygen => 15.999,
+            Nitrogen => 14.007,
+            Fluorine => 18.998,
+            Sulfur => 32.06,
             Phosphorus => 30.974,
-            Iron       => 55.845,
-            Copper     => 63.546,
-            Calcium    => 40.078,
-            Potassium  => 39.098,
-            Aluminum   => 26.982,
-            Lead       => 207.2,
-            Gold       => 196.967,
-            Silver     => 107.8682,
-            Mercury    => 200.592,
-            Tin        => 118.71,
-            Zinc       => 65.38,
-            Magnesium  => 24.305,
-            Manganese  => 54.938,
-            Iodine     => 126.90,
-            Chlorine   => 35.45,
-            Tungsten   => 183.84,
-            Tellurium  => 127.60,
-            Selenium   => 78.971,
-            Bromine    => 79.904,
-            Rubidium   => 85.468,
-            Other      => 0.0,   // fallback for unknowns
+            Iron => 55.845,
+            Copper => 63.546,
+            Calcium => 40.078,
+            Potassium => 39.098,
+            Aluminum => 26.982,
+            Lead => 207.2,
+            Gold => 196.967,
+            Silver => 107.8682,
+            Mercury => 200.592,
+            Tin => 118.71,
+            Zinc => 65.38,
+            Magnesium => 24.305,
+            Manganese => 54.938,
+            Iodine => 126.90,
+            Chlorine => 35.45,
+            Tungsten => 183.84,
+            Tellurium => 127.60,
+            Selenium => 78.971,
+            Bromine => 79.904,
+            Rubidium => 85.468,
+            Other => 0.0, // fallback for unknowns
         }
     }
 
@@ -392,13 +392,13 @@ fn init_element_lj_data() -> HashMap<Element, (f32, f32)> {
     result.insert(Fluorine, (3.00, 0.20));
     result.insert(Chlorine, (3.40, 1.00));
     result.insert(Phosphorus, (3.60, 0.85));
-    result.insert(Zinc,       (2.78, 0.40));
-    result.insert(Copper,     (2.80, 0.40));
-    result.insert(Iron,       (4.88, 0.80));
-    result.insert(Magnesium,  (3.46, 0.55));
-    result.insert(Manganese,  (4.00, 0.70));
-    result.insert(Calcium,    (4.62, 0.50));
-    result.insert(Rubidium,   (4.88, 0.35));
+    result.insert(Zinc, (2.78, 0.40));
+    result.insert(Copper, (2.80, 0.40));
+    result.insert(Iron, (4.88, 0.80));
+    result.insert(Magnesium, (3.46, 0.55));
+    result.insert(Manganese, (4.00, 0.70));
+    result.insert(Calcium, (4.62, 0.50));
+    result.insert(Rubidium, (4.88, 0.35));
 
     result
 }

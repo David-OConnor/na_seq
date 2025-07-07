@@ -27,7 +27,7 @@ pub enum AaCategory {
 }
 
 /// This struct and its methods are largely copied from the `peptide` project.
-#[derive(Clone, Copy, PartialEq, Debug, Encode, Decode)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug, Encode, Decode)]
 pub enum AminoAcid {
     Arg,
     His,
