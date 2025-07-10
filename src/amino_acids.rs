@@ -345,6 +345,14 @@ impl FromStr for AminoAcid {
             "F" | "PHE" => Self::Phe,
             "Y" | "TYR" => Self::Tyr,
             "W" | "TRP" => Self::Trp,
+            // Amber names here for specific states.
+            // todo: Sort out how to handle these special cases separately.
+            "ASH" => Self::Asp,
+            "GLH" => Self::Glu,
+            "CYM" | "CYX" => Self::Cys,
+            "HID" | "HIE" | "HIP" => Self::His,
+            "LYN" => Self::Lys,
+            "HYP" => Self::Pro,
             _ => {
                 return Err(io::Error::new(
                     io::ErrorKind::InvalidData,
