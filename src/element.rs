@@ -1,6 +1,5 @@
-use std::{collections::HashMap, fmt, io, io::ErrorKind};
-use std::fmt::Write;
-use std::str::FromStr;
+use std::{collections::HashMap, fmt, fmt::Write, io, io::ErrorKind, str::FromStr};
+
 use Element::*;
 
 pub type LjTable = HashMap<(Element, Element), (f32, f32)>;
@@ -432,10 +431,9 @@ pub fn init_lj_lut() -> LjTable {
     result
 }
 
-
 /// Identifies the atom "type" or "name", as used in a residue. This information
 /// is provided, for example, in atom-coordinate mmCIF files.
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Clone, PartialEq, Debug)]
 pub enum AtomTypeInRes {
     C,
     CA,
@@ -477,6 +475,7 @@ pub enum AtomTypeInRes {
     SD,
     SE,
     SG,
+    H(String),
 }
 
 impl FromStr for AtomTypeInRes {
@@ -484,38 +483,44 @@ impl FromStr for AtomTypeInRes {
 
     /// Accepts the exact (case-sensitive) atom label.
     fn from_str(s: &str) -> Result<Self, Self::Err> {
+        // Note: We probably want to keep this caps-sensitive.
+
+        if s.starts_with("H") {
+            return Ok(Self::H(s.to_string()));
+        }
+
         match s {
-            "C"   => Ok(Self::C),
-            "CA"  => Ok(Self::CA),
-            "CB"  => Ok(Self::CB),
-            "CD"  => Ok(Self::CD),
+            "C" => Ok(Self::C),
+            "CA" => Ok(Self::CA),
+            "CB" => Ok(Self::CB),
+            "CD" => Ok(Self::CD),
             "CD1" => Ok(Self::CD1),
             "CD2" => Ok(Self::CD2),
             "CE" => Ok(Self::CE),
             "CE1" => Ok(Self::CE1),
             "CE2" => Ok(Self::CE2),
             "CE3" => Ok(Self::CE3),
-            "CG"  => Ok(Self::CG),
+            "CG" => Ok(Self::CG),
             "CG1" => Ok(Self::CG1),
             "CG2" => Ok(Self::CG2),
             "CH2" => Ok(Self::CH2),
-            "CZ"  => Ok(Self::CZ),
+            "CZ" => Ok(Self::CZ),
             "CZ1" => Ok(Self::CZ1),
             "CZ2" => Ok(Self::CZ2),
             "CZ3" => Ok(Self::CZ3),
-            "O"   => Ok(Self::O),
-            "OD1"   => Ok(Self::OD1),
-            "OD2"   => Ok(Self::OD2),
-            "OE1"   => Ok(Self::OE1),
-            "OE2"   => Ok(Self::OE2),
+            "O" => Ok(Self::O),
+            "OD1" => Ok(Self::OD1),
+            "OD2" => Ok(Self::OD2),
+            "OE1" => Ok(Self::OE1),
+            "OE2" => Ok(Self::OE2),
             "OG" => Ok(Self::OG),
-            "OXT"   => Ok(Self::OXT),
-            "OH"  => Ok(Self::OH),
-            "N"   => Ok(Self::N),
-            "ND1"   => Ok(Self::ND1),
-            "ND2"   => Ok(Self::ND2),
-            "NE"   => Ok(Self::NE),
-            "NZ"   => Ok(Self::NZ),
+            "OXT" => Ok(Self::OXT),
+            "OH" => Ok(Self::OH),
+            "N" => Ok(Self::N),
+            "ND1" => Ok(Self::ND1),
+            "ND2" => Ok(Self::ND2),
+            "NE" => Ok(Self::NE),
+            "NZ" => Ok(Self::NZ),
             "NH1" => Ok(Self::NH1),
             "NH2" => Ok(Self::NH2),
             "NE1" => Ok(Self::NE1),
@@ -525,7 +530,7 @@ impl FromStr for AtomTypeInRes {
             "SD" => Ok(Self::SD),
             "SE" => Ok(Self::SE),
             "SG" => Ok(Self::SG),
-            _     => Err(io::Error::new(ErrorKind::InvalidData, "Unknown atom type")),
+            _ => Err(io::Error::new(ErrorKind::InvalidData, "Unknown atom type")),
         }
     }
 }
@@ -533,33 +538,33 @@ impl FromStr for AtomTypeInRes {
 impl fmt::Display for AtomTypeInRes {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let label = match self {
-            Self::C   => "C",
-            Self::CA  => "CA",
-            Self::CB  => "CB",
-            Self::CD  => "CD",
+            Self::C => "C",
+            Self::CA => "CA",
+            Self::CB => "CB",
+            Self::CD => "CD",
             Self::CD1 => "CD1",
             Self::CD2 => "CD2",
             Self::CE => "CE",
             Self::CE1 => "CE1",
             Self::CE2 => "CE2",
             Self::CE3 => "CE3",
-            Self::CG  => "CG",
+            Self::CG => "CG",
             Self::CG1 => "CG1",
             Self::CG2 => "CG2",
             Self::CH2 => "CH2",
-            Self::CZ  => "CZ",
+            Self::CZ => "CZ",
             Self::CZ1 => "CZ1",
             Self::CZ2 => "CZ2",
             Self::CZ3 => "CZ3",
-            Self::O   => "O",
-            Self::OD1   => "OD1",
-            Self::OD2   => "OD2",
-            Self::OE1   => "OE1",
-            Self::OE2   => "OE2",
-            Self::OG   => "OG",
-            Self::OH  => "OH",
-            Self::OXT   => "OXT",
-            Self::N   => "N",
+            Self::O => "O",
+            Self::OD1 => "OD1",
+            Self::OD2 => "OD2",
+            Self::OE1 => "OE1",
+            Self::OE2 => "OE2",
+            Self::OG => "OG",
+            Self::OH => "OH",
+            Self::OXT => "OXT",
+            Self::N => "N",
             Self::ND1 => "ND1",
             Self::ND2 => "ND2",
             Self::NE => "NE",
@@ -573,6 +578,7 @@ impl fmt::Display for AtomTypeInRes {
             Self::SD => "SD",
             Self::SE => "SE",
             Self::SG => "SG",
+            Self::H(label) => label,
         };
         f.write_str(label)
     }
