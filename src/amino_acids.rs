@@ -26,7 +26,6 @@ pub enum AaCategory {
     Polar,
 }
 
-/// This struct and its methods are largely copied from the `peptide` project.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug, Encode, Decode)]
 pub enum AminoAcid {
     Arg,
@@ -345,14 +344,6 @@ impl FromStr for AminoAcid {
             "F" | "PHE" => Self::Phe,
             "Y" | "TYR" => Self::Tyr,
             "W" | "TRP" => Self::Trp,
-            // Amber names here for specific states.
-            // todo: Sort out how to handle these special cases separately.
-            "ASH" => Self::Asp,
-            "GLH" => Self::Glu,
-            "CYM" | "CYX" => Self::Cys,
-            "HID" | "HIE" | "HIP" => Self::His,
-            "LYN" => Self::Lys,
-            "HYP" => Self::Pro,
             _ => {
                 return Err(io::Error::new(
                     io::ErrorKind::InvalidData,
@@ -372,5 +363,101 @@ impl fmt::Display for AminoAcid {
         );
 
         write!(f, "{}", v)
+    }
+}
+
+/// Representations of amino acids in non-standard tauteromic and protenation states.
+/// See [Amber RM](https://ambermd.org/doc12/Amber25.pdf), section 13.2: Residue naming conventions.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug, Encode, Decode)]
+pub enum AminoAcidProtenationVariant {
+    /// His
+    Hid,
+    Hie,
+    Hip,
+    /// Cys
+    Cym,
+    Cyx,
+    /// Asp
+    Ash,
+    /// Glu
+    Glh,
+    /// Lys
+    Lyn,
+    /// Terminals
+    Ace,
+    Nhe,
+    Nme,
+    /// Proline
+    Hyp,
+}
+
+impl FromStr for AminoAcidProtenationVariant {
+    type Err = io::Error;
+
+    fn from_str(val: &str) -> Result<Self, Self::Err> {
+        Ok(match val.to_uppercase().as_str() {
+            "HID" => Self::Hid,
+            "HIE" => Self::Hie,
+            "HIP" => Self::Hip,
+            "CYM" => Self::Cym,
+            "CYX" => Self::Cyx,
+            "ASH" => Self::Ash,
+            "GLH" => Self::Glh,
+            "LYN" => Self::Lyn,
+            "ACE" => Self::Ace,
+            "NHE" => Self::Nhe,
+            "NME" => Self::Nme,
+            "HYP" => Self::Hyp,
+
+            _ => {
+                return Err(io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    "Invalid amino acid string provided",
+                ));
+            }
+        })
+    }
+}
+
+impl fmt::Display for AminoAcidProtenationVariant {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let v = match self {
+            Self::Hid => "HID",
+            Self::Hie => "HIE",
+            Self::Hip => "HIP",
+            Self::Cym => "CYM",
+            Self::Cyx => "CYX",
+            Self::Ash => "ASH",
+            Self::Glh => "GLH",
+            Self::Lyn => "LYN",
+            Self::Ace => "ACE",
+            Self::Nhe => "NHE",
+            Self::Nme => "NME",
+            Self::Hyp => "HYP",
+        };
+
+        write!(f, "{}", v)
+    }
+}
+
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug, Encode, Decode)]
+/// Allows either normal, or a protenation variant. Useful when parsing Amber amino acid
+/// parameter files.
+pub enum AminoAcidGeneral {
+    Standard(AminoAcid),
+    Variant(AminoAcidProtenationVariant),
+}
+
+impl FromStr for AminoAcidGeneral {
+    type Err = io::Error;
+
+    fn from_str(val: &str) -> Result<Self, Self::Err> {
+        match AminoAcid::from_str(val) {
+            Ok(v) => Ok(Self::Standard(v)),
+            Err(_) => match AminoAcidProtenationVariant::from_str(val) {
+                Ok(v) => Ok(Self::Variant(v)),
+                Err(e) => Err(e),
+            },
+        }
     }
 }

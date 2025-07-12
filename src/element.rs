@@ -1,6 +1,8 @@
-use std::{collections::HashMap, fmt, fmt::Write, io, io::ErrorKind, str::FromStr};
+use std::{collections::HashMap, fmt, io, io::ErrorKind, str::FromStr};
 
 use Element::*;
+
+use crate::AminoAcidProtenationVariant;
 
 pub type LjTable = HashMap<(Element, Element), (f32, f32)>;
 
@@ -376,6 +378,43 @@ impl Element {
         let epsilon = 0.01 * (approximate_atomic_number as f32).powf(0.7);
 
         (sigma, epsilon)
+    }
+}
+
+impl fmt::Display for Element {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let v = match self {
+            Hydrogen => "Hydrogen",
+            Carbon => "Carbon",
+            Oxygen => "Oxygen",
+            Nitrogen => "Nitrogen",
+            Fluorine => "Fluorine",
+            Sulfur => "Sulfur",
+            Phosphorus => "Phosphorus",
+            Iron => "Iron",
+            Copper => "Copper",
+            Calcium => "Calcium",
+            Potassium => "Potassium",
+            Aluminum => "Aluminum",
+            Lead => "Lead",
+            Gold => "Gold",
+            Silver => "Silver",
+            Mercury => "Mercury",
+            Tin => "Tin",
+            Zinc => "Zinc",
+            Magnesium => "Magnesium",
+            Manganese => "Manganese",
+            Iodine => "Iodine",
+            Chlorine => "Chlorine",
+            Tungsten => "Tungsten",
+            Tellurium => "Tellurium",
+            Selenium => "Selenium",
+            Bromine => "Bromine",
+            Rubidium => "Rubidium",
+            Other => "Other",
+        };
+
+        write!(f, "{}", v)
     }
 }
 

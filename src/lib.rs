@@ -4,7 +4,9 @@ use bincode::{Decode, Encode};
 
 use crate::Nucleotide::*;
 pub use crate::{
-    amino_acids::{AaIdent, AminoAcid, CodingResult},
+    amino_acids::{
+        AaIdent, AminoAcid, AminoAcidGeneral, AminoAcidProtenationVariant, CodingResult,
+    },
     element::{AtomTypeInRes, Element},
     nucleotide::{Nucleotide, NucleotideGeneral},
     restriction_enzyme::RestrictionEnzyme,
