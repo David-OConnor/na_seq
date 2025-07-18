@@ -321,29 +321,31 @@ impl AminoAcid {
 impl FromStr for AminoAcid {
     type Err = io::Error;
 
+    /// The N and C-prefixed variants indicate N and C terminus amino acids. They are present,
+    /// for example, in Amber data files `aminoct12.lib` and `aminont12.lib`.
     fn from_str(val: &str) -> Result<Self, Self::Err> {
         Ok(match val.to_uppercase().as_str() {
-            "R" | "ARG" => Self::Arg,
-            "H" | "HIS" => Self::His,
-            "K" | "LYS" => Self::Lys,
-            "D" | "ASP" => Self::Asp,
-            "E" | "GLU" => Self::Glu,
-            "S" | "SER" => Self::Ser,
-            "T" | "THR" => Self::Thr,
-            "N" | "ASN" => Self::Asn,
-            "Q" | "GLN" => Self::Gln,
-            "C" | "CYS" => Self::Cys,
-            "U" | "SEC" => Self::Sec,
-            "G" | "GLY" => Self::Gly,
-            "P" | "PRO" => Self::Pro,
-            "A" | "ALA" => Self::Ala,
-            "V" | "VAL" => Self::Val,
-            "I" | "ILE" => Self::Ile,
-            "L" | "LEU" => Self::Leu,
-            "M" | "MET" => Self::Met,
-            "F" | "PHE" => Self::Phe,
-            "Y" | "TYR" => Self::Tyr,
-            "W" | "TRP" => Self::Trp,
+            "R"   | "ARG"  | "NARG"  | "CARG"  => Self::Arg,
+            "H"   | "HIS"  | "NHIS"  | "CHIS"  => Self::His,
+            "K"   | "LYS"  | "NLYS"  | "CLYS"  => Self::Lys,
+            "D"   | "ASP"  | "NASP"  | "CASP"  => Self::Asp,
+            "E"   | "GLU"  | "NGLU"  | "CGLU"  => Self::Glu,
+            "S"   | "SER"  | "NSER"  | "CSER"  => Self::Ser,
+            "T"   | "THR"  | "NTHR"  | "CTHR"  => Self::Thr,
+            "N"   | "ASN"  | "NASN"  | "CASN"  => Self::Asn,
+            "Q"   | "GLN"  | "NGLN"  | "CGLN"  => Self::Gln,
+            "C"   | "CYS"  | "NCYS"  | "CCYS"  => Self::Cys,
+            "U"   | "SEC"  | "NSEC"  | "CSEC"  => Self::Sec,
+            "G"   | "GLY"  | "NGLY"  | "CGLY"  => Self::Gly,
+            "P"   | "PRO"  | "NPRO"  | "CPRO"  => Self::Pro,
+            "A"   | "ALA"  | "NALA"  | "CALA"  => Self::Ala,
+            "V"   | "VAL"  | "NVAL"  | "CVAL"  => Self::Val,
+            "I"   | "ILE"  | "NILE"  | "CILE"  => Self::Ile,
+            "L"   | "LEU"  | "NLEU"  | "CLEU"  => Self::Leu,
+            "M"   | "MET"  | "NMET"  | "CMET"  => Self::Met,
+            "F"   | "PHE"  | "NPHE"  | "CPHE"  => Self::Phe,
+            "Y"   | "TYR"  | "NTYR"  | "CTYR"  => Self::Tyr,
+            "W"   | "TRP"  | "NTRP"  | "CTRP"  => Self::Trp,
             _ => {
                 return Err(io::Error::new(
                     io::ErrorKind::InvalidData,
@@ -394,20 +396,21 @@ pub enum AminoAcidProtenationVariant {
 impl FromStr for AminoAcidProtenationVariant {
     type Err = io::Error;
 
+    /// See note on N and C-prefixed on AminoAcid::from_str
     fn from_str(val: &str) -> Result<Self, Self::Err> {
         Ok(match val.to_uppercase().as_str() {
-            "HID" => Self::Hid,
-            "HIE" => Self::Hie,
-            "HIP" => Self::Hip,
-            "CYM" => Self::Cym,
-            "CYX" => Self::Cyx,
-            "ASH" => Self::Ash,
-            "GLH" => Self::Glh,
-            "LYN" => Self::Lyn,
-            "ACE" => Self::Ace,
-            "NHE" => Self::Nhe,
-            "NME" => Self::Nme,
-            "HYP" => Self::Hyp,
+            "HID"  | "NHID"  | "CHID"  => Self::Hid,
+            "HIE"  | "NHIE"  | "CHIE"  => Self::Hie,
+            "HIP"  | "NHIP"  | "CHIP"  => Self::Hip,
+            "CYM"  | "NCYM"  | "CCYM"  => Self::Cym,
+            "CYX"  | "NCYX"  | "CCYX"  => Self::Cyx,
+            "ASH"  | "NASH"  | "CASH"  => Self::Ash,
+            "GLH"  | "NGLH"  | "CGLH"  => Self::Glh,
+            "LYN"  | "NLYN"  | "CLYN"  => Self::Lyn,
+            "ACE"  | "NACE"  | "CACE"  => Self::Ace,
+            "NHE"  | "NNHE"  | "CNHE"  => Self::Nhe,
+            "NME"  | "NNME"  | "CNME"  => Self::Nme,
+            "HYP"  | "NHYP"  | "CHYP"  => Self::Hyp,
 
             _ => {
                 return Err(io::Error::new(

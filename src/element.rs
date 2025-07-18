@@ -488,6 +488,7 @@ pub enum AtomTypeInRes {
     CG1,
     CG2,
     CH2,
+    CH3,
     CZ,
     CZ1,
     CZ2,
@@ -522,7 +523,8 @@ impl FromStr for AtomTypeInRes {
 
     /// Accepts the exact (case-sensitive) atom label.
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        // Note: We probably want to keep this caps-sensitive.
+        // We keep this caps-sensitive, as residues and
+        // proteins use different capitalization conventions.
 
         if s.starts_with("H") {
             return Ok(Self::H(s.to_string()));
@@ -543,6 +545,7 @@ impl FromStr for AtomTypeInRes {
             "CG1" => Ok(Self::CG1),
             "CG2" => Ok(Self::CG2),
             "CH2" => Ok(Self::CH2),
+            "CH3" => Ok(Self::CH3),
             "CZ" => Ok(Self::CZ),
             "CZ1" => Ok(Self::CZ1),
             "CZ2" => Ok(Self::CZ2),
@@ -569,7 +572,7 @@ impl FromStr for AtomTypeInRes {
             "SD" => Ok(Self::SD),
             "SE" => Ok(Self::SE),
             "SG" => Ok(Self::SG),
-            _ => Err(io::Error::new(ErrorKind::InvalidData, "Unknown atom type")),
+            _ => Err(io::Error::new(ErrorKind::InvalidData, "Unknown atom type when parsing type in res")),
         }
     }
 }
@@ -591,6 +594,7 @@ impl fmt::Display for AtomTypeInRes {
             Self::CG1 => "CG1",
             Self::CG2 => "CG2",
             Self::CH2 => "CH2",
+            Self::CH3 => "CH3",
             Self::CZ => "CZ",
             Self::CZ1 => "CZ1",
             Self::CZ2 => "CZ2",
