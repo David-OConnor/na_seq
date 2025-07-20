@@ -386,8 +386,11 @@ pub enum AminoAcidProtenationVariant {
     /// Lys
     Lyn,
     /// Terminals
+    /// Acetyl group
     Ace,
+    /// N-methylamid group
     Nhe,
+    /// Neutral histidine
     Nme,
     /// Proline
     Hyp,
@@ -440,6 +443,21 @@ impl fmt::Display for AminoAcidProtenationVariant {
         };
 
         write!(f, "{}", v)
+    }
+}
+
+impl AminoAcidProtenationVariant {
+    /// E.g. if Hid or Hie, get His. Returns None for the temrinal groups Ace and Nme.
+    pub fn get_standard(&self) -> Option<AminoAcid> {
+        match self {
+            Self::Hid | Self::Hie | Self::Hip | Self::Nhe => Some(AminoAcid::His),
+            Self::Cym | Self::Cyx => Some(AminoAcid::Cys),
+            Self::Ash => Some(AminoAcid::Asp),
+            Self::Glh => Some(AminoAcid::Glu),
+            Self::Lyn => Some(AminoAcid::Lys),
+            Self::Hyp => Some(AminoAcid::Pro),
+            _ => None,
+        }
     }
 }
 
