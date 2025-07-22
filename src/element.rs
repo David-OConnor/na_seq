@@ -516,12 +516,15 @@ pub enum AtomTypeInRes {
     SE,
     SG,
     H(String),
+    /// E.g. ligands and water molecules.
+    Hetero(String),
 }
 
 impl FromStr for AtomTypeInRes {
     type Err = io::Error;
 
     /// Accepts the exact (case-sensitive) atom label.
+    /// We parse hetero atoms into this manually, to prevent accidental coercion to that.
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         // We keep this caps-sensitive, as residues and
         // proteins use different capitalization conventions.
@@ -622,6 +625,7 @@ impl fmt::Display for AtomTypeInRes {
             Self::SE => "SE",
             Self::SG => "SG",
             Self::H(label) => label,
+            Self::Hetero(label) => label,
         };
         f.write_str(label)
     }
