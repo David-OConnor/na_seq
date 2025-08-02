@@ -190,7 +190,7 @@ pub fn deser_seq_bin(data: &[u8]) -> io::Result<Seq> {
             result.push(Nucleotide::try_from(bits).map_err(|_| {
                 io::Error::new(
                     ErrorKind::InvalidData,
-                    format!("Invalid NT serialization: {}, {}", byte, bits),
+                    format!("Invalid NT serialization: {byte}, {bits}"),
                 )
             })?);
         }

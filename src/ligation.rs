@@ -126,11 +126,11 @@ pub fn ligate(fragments: &[LigationFragment]) -> Vec<Seq> {
                 .map(|nt| nt.complement())
                 .collect();
 
-            let nt_overhang_b: Vec<_> = re_l
-                .overhang_top_right(&frag.seq[0..1]) // todo: You must update this.
-                .iter()
-                .map(|nt| nt.complement())
-                .collect();
+            // let nt_overhang_b: Vec<_> = re_l
+            //     .overhang_top_right(&frag.seq[0..1]) // todo: You must update this.
+            //     .iter()
+            //     .map(|nt| nt.complement())
+            //     .collect();
 
             // Match complements on the same diagonal: top left-to-top-left
             for frag_2 in fragments {

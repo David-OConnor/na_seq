@@ -364,7 +364,7 @@ impl fmt::Display for AminoAcid {
             self.to_str(AaIdent::OneLetter)
         );
 
-        write!(f, "{}", v)
+        write!(f, "{v}")
     }
 }
 
@@ -442,7 +442,7 @@ impl fmt::Display for AminoAcidProtenationVariant {
             Self::Hyp => "HYP",
         };
 
-        write!(f, "{}", v)
+        write!(f, "{v}")
     }
 }
 

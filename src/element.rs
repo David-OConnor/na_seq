@@ -2,8 +2,6 @@ use std::{collections::HashMap, fmt, io, io::ErrorKind, str::FromStr};
 
 use Element::*;
 
-use crate::AminoAcidProtenationVariant;
-
 pub type LjTable = HashMap<(Element, Element), (f32, f32)>;
 
 #[derive(Clone, Copy, PartialEq, Debug, Default, Hash, Eq)]
@@ -414,7 +412,7 @@ impl fmt::Display for Element {
             Other => "Other",
         };
 
-        write!(f, "{}", v)
+        write!(f, "{v}")
     }
 }
 
@@ -443,12 +441,13 @@ fn init_element_lj_data() -> HashMap<Element, (f32, f32)> {
 }
 
 /// Note: Order invariant; insert one for each element pair.
+/// todo: Consider removing this, as it's simplistic.
 pub fn init_lj_lut() -> LjTable {
     let mut result = HashMap::new();
 
     let base = init_element_lj_data();
 
-    let els: Vec<_> = base.keys().map(|el| *el).collect();
+    let els: Vec<_> = base.keys().copied().collect();
 
     for el_0 in &els {
         // Retrieve single-element data for el_0
