@@ -574,7 +574,10 @@ impl FromStr for AtomTypeInRes {
             "SD" => Ok(Self::SD),
             "SE" => Ok(Self::SE),
             "SG" => Ok(Self::SG),
-            _ => Err(io::Error::new(ErrorKind::InvalidData, "Unknown atom type when parsing type in res")),
+            _ => Err(io::Error::new(
+                ErrorKind::InvalidData,
+                "Unknown atom type when parsing type in res",
+            )),
         }
     }
 }
