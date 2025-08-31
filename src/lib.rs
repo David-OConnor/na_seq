@@ -5,7 +5,7 @@ use bincode::{Decode, Encode};
 use crate::Nucleotide::*;
 pub use crate::{
     amino_acids::{
-        AaIdent, AminoAcid, AminoAcidGeneral, AminoAcidProtenationVariant, CodingResult,
+        AaCategory, AaIdent, AminoAcid, AminoAcidGeneral, AminoAcidProtenationVariant, CodingResult,
     },
     element::{AtomTypeInRes, Element},
     nucleotide::{Nucleotide, NucleotideGeneral},

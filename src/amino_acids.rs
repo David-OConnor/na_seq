@@ -19,8 +19,6 @@ pub enum CodingResult {
 #[derive(Clone, Copy, PartialEq)]
 pub enum AaCategory {
     Hydrophobic,
-    // Neutral, // todo: Rem? Currently a placeholder for
-    // Hydrophilic,
     Acidic,
     Basic,
     Polar,
