@@ -2,8 +2,9 @@
 
 [![Crate](https://img.shields.io/crates/v/na_seq.svg)](https://crates.io/crates/na_seq)
 [![Docs](https://docs.rs/na_seq/badge.svg)](https://docs.rs/na_seq)
+[![PyPI](https://img.shields.io/pypi/v/na-seq.svg)](https://pypi.org/project/na-seq)
 
-This library contains types and functions used for performing operations on DNA and amino acid sequences. 
+This Rust and Python library contains types and functions used for performing operations on DNA and amino acid sequences. 
 Its most fundamental types are the `Nucleotide` and `AminoAcid` enums, representing a single DNA nucleotide, 
 and single amino acid respectively. This library is general, and intended to be used by any program or library 
 that uses DNA sequences. It also includes an `Element` enum, with parameters associated with each element.
