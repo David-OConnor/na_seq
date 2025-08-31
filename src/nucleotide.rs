@@ -1,6 +1,6 @@
 //! This module contains types and functions for working with nucleotides.
 
-use std::{io, io::ErrorKind};
+use std::{fmt, io, io::ErrorKind, str::FromStr};
 
 use Nucleotide::*;
 use bincode::{Decode, Encode};
@@ -17,20 +17,28 @@ pub enum Nucleotide {
     G = 0b11,
 }
 
-// todo: Conflict here with TryFromPrimitive, which uses the 2-bit u8 repr.
-// impl TryFrom<u8> for Nucleotide {
-//     type Error = io::Error;
-//
-//     fn try_from(val: u8) -> Result<Self, Self::Error> {
-//         match val {
-//             b'A' | b'a' => Ok(A),
-//             b'T' | b't' => Ok(T),
-//             b'G' | b'g' => Ok(G),
-//             b'C' | b'c' => Ok(C),
-//             _ => Err(io::Error::new(ErrorKind::InvalidData, "Invalid nucleotide")),
-//         }
-//     }
-// }
+impl FromStr for Nucleotide {
+    type Err = io::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_uppercase().as_str() {
+            "A" => Ok(A),
+            "T" => Ok(T),
+            "G" => Ok(G),
+            "C" => Ok(C),
+            _ => Err(io::Error::new(
+                ErrorKind::InvalidData,
+                "Invalid nucleotide letter",
+            )),
+        }
+    }
+}
+
+impl fmt::Display for Nucleotide {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.to_str_upper())
+    }
+}
 
 impl Nucleotide {
     /// E.g. For interop with FASTA, GenBank, and SnapGene formats.
@@ -157,28 +165,6 @@ pub enum NucleotideGeneral {
     K = 10,
 }
 
-// todo: Conflict here with TryFromPrimitive, which uses the 2-bit u8 repr.
-// impl TryFrom<u8> for NucleotideGeneral {
-//     type Error = io::Error;
-//
-//     fn try_from(val: u8) -> Result<Self, Self::Error> {
-// Ok(match val {
-// b'T' | b't' => Self::T,
-// b'C' | b'c' => Self::C,
-// b'A' | b'a' => Self::A,
-// b'G' | b'g' => Self::G,
-// b'N' | b'n' => Self::N,
-// b'W' | b'w' => Self::W,
-// b'S' | b's' => Self::S,
-// b'Y' | b'y' => Self::Y,
-// b'R' | b'r' => Self::R,
-// b'M' | b'm' => Self::M,
-// b'K' | b'k' => Self::K,
-// _ => return Err(io::Error::new(ErrorKind::InvalidData, "Invalid nucleotide letter")),
-// })
-//     }
-// }
-
 impl NucleotideGeneral {
     pub fn from_u8_letter(val: u8) -> io::Result<Self> {
         Ok(match val {
@@ -222,23 +208,6 @@ impl NucleotideGeneral {
     pub fn matches(&self, nt: Nucleotide) -> bool {
         self.nt_matches().contains(&nt)
     }
-
-    // pub fn from_u8(val: u8) -> io::Result<Self> {
-    //     Ok(match val {
-    //         b'T' | b't' => Self::T,
-    //         b'C' | b'c' => Self::C,
-    //         b'A' | b'a' => Self::A,
-    //         b'G' | b'g' => Self::G,
-    //         b'N' | b'n' => Self::N,
-    //         b'W' | b'w' => Self::W,
-    //         b'S' | b's' => Self::S,
-    //         b'Y' | b'y' => Self::Y,
-    //         b'R' | b'r' => Self::T,
-    //         b'M' | b'm' => Self::M,
-    //         b'K' | b'k' => Self::K,
-    //         _ => return Err(io::Error::new(ErrorKind::InvalidData, "Invalid nucleotide")),
-    //     })
-    // }
 
     pub fn to_u8_lower(&self) -> u8 {
         match self {
