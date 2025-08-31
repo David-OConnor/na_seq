@@ -1,8 +1,8 @@
-use std::{collections::HashMap, fmt, io, io::ErrorKind, str::FromStr};
+use std::{fmt, io, io::ErrorKind, str::FromStr};
 
 use Element::*;
 
-pub type LjTable = HashMap<(Element, Element), (f32, f32)>;
+// pub type LjTable = HashMap<(Element, Element), (f32, f32)>;
 
 #[derive(Clone, Copy, PartialEq, Debug, Default, Hash, Eq)]
 pub enum Element {
@@ -70,42 +70,6 @@ impl Element {
             Other => 0, // default to 0 for unknown or unhandled elements
         }
     }
-
-    // pub fn electronegativity(&self) -> f32 {
-    //     match self {
-    //         Hydrogen => 2.20,
-    //         Carbon => 2.55,
-    //         Oxygen => 3.44,
-    //         Nitrogen => 3.04,
-    //         Fluorine => 3.98,
-    //         Sulfur => 2.58,
-    //         Phosphorus => 2.19,
-    //         Iron => 1.83,
-    //         Copper => 1.90,
-    //         Calcium => 1.00,
-    //         Potassium => 0.82,
-    //         Aluminum => 1.61,
-    //         Lead => 2.33,
-    //         Gold => 2.54,
-    //         Silver => 1.93,
-    //         Mercury => 2.00,
-    //         Tin => 1.96,
-    //         Zinc => 1.65,
-    //         Magnesium => 1.31,
-    //         Iodine => 2.66,
-    //         Chlorine => 3.16,
-    //         Tungsten => 2.36,
-    //         Tellurium => 2.10,
-    //         Selenium => 2.55,
-    //         Other => {
-    //             eprintln!(
-    //                 "Error: Attempting to get a Gasteiger electronegativity for an unknown element."
-    //             );
-    //             0.0
-    //         }
-    //         _ => 0.,
-    //     }
-    // }
 
     pub fn from_letter(letter: &str) -> io::Result<Self> {
         match letter.to_uppercase().as_ref() {
@@ -352,31 +316,31 @@ impl Element {
         }
     }
 
-    /// Returns approximate Lennard-Jones parameters (\sigma, \epsilon) in Å and kJ/mol.
-    /// These are *not* real force-field values, just a demonstration.
-    pub fn lj_params(&self) -> (f32, f32) {
-        // For demonstration, we compute sigma from the van der Waals radius
-        //   sigma = (2 * vdw_radius) / 2^(1/6).
-        // Then guess epsilon from a trivial rule or store a small table.
-        // Real simulations typically get these from standard force fields!
-
-        let r_vdw = self.vdw_radius(); // in Å
-        // Avoid zero or negative vdw radius
-        let r_vdw = if r_vdw <= 0.0 { 1.5 } else { r_vdw };
-
-        // Sigma from naive formula:
-        let sigma = (2.0 * r_vdw) / (2_f32.powf(1.0 / 6.0));
-
-        // A naive guess for epsilon
-        // (In reality, you’d store carefully fit data or use a better heuristic.)
-        // For example, heavier elements get a bigger well depth:
-        let approximate_atomic_number = self.atomic_number();
-
-        // Pretend epsilon in kJ/mol is something like 0.01 * Z^(0.7)
-        let epsilon = 0.01 * (approximate_atomic_number as f32).powf(0.7);
-
-        (sigma, epsilon)
-    }
+    // /// Returns approximate Lennard-Jones parameters (\sigma, \epsilon) in Å and kJ/mol.
+    // /// These are *not* real force-field values, just a demonstration.
+    // pub fn lj_params(&self) -> (f32, f32) {
+    //     // For demonstration, we compute sigma from the van der Waals radius
+    //     //   sigma = (2 * vdw_radius) / 2^(1/6).
+    //     // Then guess epsilon from a trivial rule or store a small table.
+    //     // Real simulations typically get these from standard force fields!
+    //
+    //     let r_vdw = self.vdw_radius(); // in Å
+    //     // Avoid zero or negative vdw radius
+    //     let r_vdw = if r_vdw <= 0.0 { 1.5 } else { r_vdw };
+    //
+    //     // Sigma from naive formula:
+    //     let sigma = (2.0 * r_vdw) / (2_f32.powf(1.0 / 6.0));
+    //
+    //     // A naive guess for epsilon
+    //     // (In reality, you’d store carefully fit data or use a better heuristic.)
+    //     // For example, heavier elements get a bigger well depth:
+    //     let approximate_atomic_number = self.atomic_number();
+    //
+    //     // Pretend epsilon in kJ/mol is something like 0.01 * Z^(0.7)
+    //     let epsilon = 0.01 * (approximate_atomic_number as f32).powf(0.7);
+    //
+    //     (sigma, epsilon)
+    // }
 }
 
 impl fmt::Display for Element {
@@ -415,59 +379,59 @@ impl fmt::Display for Element {
         write!(f, "{v}")
     }
 }
+//
+// fn init_element_lj_data() -> HashMap<Element, (f32, f32)> {
+//     // (sigma in Å, epsilon in kJ/mol) - approximate demo values.
+//     // todo: Get better, more speicfic values.
+//     let mut result = HashMap::new();
+//
+//     result.insert(Carbon, (3.40, 0.27));
+//     result.insert(Hydrogen, (2.50, 0.13));
+//     result.insert(Nitrogen, (3.30, 0.20));
+//     result.insert(Oxygen, (3.12, 0.21));
+//     result.insert(Sulfur, (3.60, 1.20));
+//     result.insert(Fluorine, (3.00, 0.20));
+//     result.insert(Chlorine, (3.40, 1.00));
+//     result.insert(Phosphorus, (3.60, 0.85));
+//     result.insert(Zinc, (2.78, 0.40));
+//     result.insert(Copper, (2.80, 0.40));
+//     result.insert(Iron, (4.88, 0.80));
+//     result.insert(Magnesium, (3.46, 0.55));
+//     result.insert(Manganese, (4.00, 0.70));
+//     result.insert(Calcium, (4.62, 0.50));
+//     result.insert(Rubidium, (4.88, 0.35));
+//
+//     result
+// }
 
-fn init_element_lj_data() -> HashMap<Element, (f32, f32)> {
-    // (sigma in Å, epsilon in kJ/mol) - approximate demo values.
-    // todo: Get better, more speicfic values.
-    let mut result = HashMap::new();
-
-    result.insert(Carbon, (3.40, 0.27));
-    result.insert(Hydrogen, (2.50, 0.13));
-    result.insert(Nitrogen, (3.30, 0.20));
-    result.insert(Oxygen, (3.12, 0.21));
-    result.insert(Sulfur, (3.60, 1.20));
-    result.insert(Fluorine, (3.00, 0.20));
-    result.insert(Chlorine, (3.40, 1.00));
-    result.insert(Phosphorus, (3.60, 0.85));
-    result.insert(Zinc, (2.78, 0.40));
-    result.insert(Copper, (2.80, 0.40));
-    result.insert(Iron, (4.88, 0.80));
-    result.insert(Magnesium, (3.46, 0.55));
-    result.insert(Manganese, (4.00, 0.70));
-    result.insert(Calcium, (4.62, 0.50));
-    result.insert(Rubidium, (4.88, 0.35));
-
-    result
-}
-
-/// Note: Order invariant; insert one for each element pair.
-/// todo: Consider removing this, as it's simplistic.
-pub fn init_lj_lut() -> LjTable {
-    let mut result = HashMap::new();
-
-    let base = init_element_lj_data();
-
-    let els: Vec<_> = base.keys().copied().collect();
-
-    for el_0 in &els {
-        // Retrieve single-element data for el_0
-        let (sigma_0, eps_0) = base[el_0];
-
-        for el_1 in &els {
-            let (sigma_1, eps_1) = base[el_1];
-
-            // Lorentz–Berthelot
-            let sigma = 0.5 * (sigma_0 + sigma_1);
-            let epsilon = (eps_0 * eps_1).sqrt();
-
-            // Insert into the LUT, order: (el_0, el_1)
-            // If you want to avoid duplicates, do if i <= j, etc.
-            result.insert((*el_0, *el_1), (sigma, epsilon));
-        }
-    }
-
-    result
-}
+// /// Note: Order invariant; insert one for each element pair.
+// /// todo: Consider removing this, as it's simplistic.
+// pub fn init_lj_lut() -> LjTable {
+//     let mut result = HashMap::new();
+//
+//     let base = init_element_lj_data();
+//
+//     let els: Vec<_> = base.keys().copied().collect();
+//
+//     for el_0 in &els {
+//         // Retrieve single-element data for el_0
+//         let (sigma_0, eps_0) = base[el_0];
+//
+//         for el_1 in &els {
+//             let (sigma_1, eps_1) = base[el_1];
+//
+//             // Lorentz–Berthelot
+//             let sigma = 0.5 * (sigma_0 + sigma_1);
+//             let epsilon = (eps_0 * eps_1).sqrt();
+//
+//             // Insert into the LUT, order: (el_0, el_1)
+//             // If you want to avoid duplicates, do if i <= j, etc.
+//             result.insert((*el_0, *el_1), (sigma, epsilon));
+//         }
+//     }
+//
+//     result
+// }
 
 /// Identifies the atom "type" or "name", as used in a residue. This information
 /// is provided, for example, in atom-coordinate mmCIF files.

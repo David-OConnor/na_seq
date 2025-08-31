@@ -21,16 +21,7 @@ impl FromStr for Nucleotide {
     type Err = io::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s.to_uppercase().as_str() {
-            "A" => Ok(A),
-            "T" => Ok(T),
-            "G" => Ok(G),
-            "C" => Ok(C),
-            _ => Err(io::Error::new(
-                ErrorKind::InvalidData,
-                "Invalid nucleotide letter",
-            )),
-        }
+        Self::from_u8_letter(s.as_bytes()[0])
     }
 }
 
@@ -163,6 +154,20 @@ pub enum NucleotideGeneral {
     M = 9,
     /// G or T
     K = 10,
+}
+
+impl FromStr for NucleotideGeneral {
+    type Err = io::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Self::from_u8_letter(s.as_bytes()[0])
+    }
+}
+
+impl fmt::Display for NucleotideGeneral {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.to_str_upper())
+    }
 }
 
 impl NucleotideGeneral {
