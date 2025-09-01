@@ -22,11 +22,25 @@ See [the docs](https://docs.rs/na_seq) for details on data structures and functi
 
 Also includes restriction enzyme and ligation basics.
 
+Minmal python example. See the rust docs for full details:
+
+```python
+from na_seq import *
+
+aa = AminoAcid.from_codons([Nucleotide.A, Nucleotide.T, Nucleotide.G])
+aa = AminoAcid.from_str("HIS")
+
+aa.to_str(AaIdent.OneLetter)
+aa.to_str(AaIdent.ThreeLetters)
+
+Element.C.atomic_weight()
+```
+
 
 ## Utility functionality
 - Sequence and nucleotide complements
 - Sequence and nucleotide weight
-- GC content
+- GC content, and misc general properties of elements and amino acids. ( e.g. hydrophobicity, weight, CPK colors)
 - A small restriction enzyme library
 
 
@@ -34,3 +48,5 @@ We may add Sequence searches, and other utility features in the future.
 
 This library is used by the [PlasCAD](https://github.com/David-OConnor/plascad) plasmid editor and [Daedalus](https://github.com/David-OConnor/daedalus) 
 molecule viewer.
+
+Note: The Python version currently does not include restriction-enzyme and ligation functionality.

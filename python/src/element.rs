@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use na_seq_rs::{AtomTypeInRes as RsAtomTypeInRes, Element as RsElement};
+use na_seq_rs;
 use pyo3::{prelude::*, types::PyType};
 
 use crate::map_io;
@@ -8,28 +8,26 @@ use crate::map_io;
 #[pyclass(module = "na_seq")]
 #[derive(Clone, Copy)]
 pub struct Element {
-    pub inner: RsElement,
+    pub inner: na_seq_rs::Element,
 }
 
 #[pymethods]
 impl Element {
-    #[new]
-    fn new_from_letter(s: &str) -> PyResult<Self> {
-        Ok(Self {
-            inner: map_io(RsElement::from_letter(s))?,
-        })
-    }
-
     #[classmethod]
     fn from_letter(_cls: &Bound<PyType>, s: &str) -> PyResult<Self> {
         Ok(Self {
-            inner: map_io(RsElement::from_letter(s))?,
+            inner: map_io(na_seq_rs::Element::from_letter(s))?,
         })
     }
 
     fn to_letter(&self) -> String {
         self.inner.to_letter()
     }
+
+    fn valence_typical(&self) -> usize {
+        self.inner.valence_typical()
+    }
+
     fn color(&self) -> (f32, f32, f32) {
         self.inner.color()
     }
@@ -46,53 +44,33 @@ impl Element {
         self.inner.atomic_weight()
     }
 
-    fn name(&self) -> String {
+    fn __str__(&self) -> String {
         self.inner.to_string()
     }
-
-    #[getter]
-    fn letter(&self) -> String {
-        self.inner.to_letter()
-    }
-
-    fn __str__(&self) -> String {
-        self.inner.to_letter()
-    }
     fn __repr__(&self) -> String {
-        format!("Element({})", self.inner.to_letter())
+        format!("{:?}", self.inner)
     }
 }
 
 #[pyclass(module = "na_seq")]
 #[derive(Clone)]
 pub struct AtomTypeInRes {
-    pub inner: RsAtomTypeInRes,
+    pub inner: na_seq_rs::AtomTypeInRes,
 }
 
 #[pymethods]
 impl AtomTypeInRes {
-    #[new]
-    fn new_from_label(s: &str) -> PyResult<Self> {
-        Ok(Self {
-            inner: map_io(RsAtomTypeInRes::from_str(s))?,
-        })
-    }
-
     #[classmethod]
     fn from_str(_cls: &Bound<PyType>, s: &str) -> PyResult<Self> {
         Ok(Self {
-            inner: map_io(RsAtomTypeInRes::from_str(s))?,
+            inner: map_io(na_seq_rs::AtomTypeInRes::from_str(s))?,
         })
-    }
-
-    fn label(&self) -> String {
-        self.inner.to_string()
     }
 
     fn __str__(&self) -> String {
         self.inner.to_string()
     }
     fn __repr__(&self) -> String {
-        format!("AtomTypeInRes({})", self.inner.to_string())
+        format!("{:?}", self.inner)
     }
 }

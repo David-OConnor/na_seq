@@ -1,4 +1,4 @@
-mod amino_acid;
+mod amino_acids;
 pub mod element;
 pub mod nucleotide;
 
@@ -13,7 +13,7 @@ use pyo3::{
     Bound, Py, PyResult, Python, exceptions::PyValueError, prelude::*, pymodule, types::PyType,
 };
 
-use crate::amino_acid::{
+use crate::amino_acids::{
     AaCategory, AaIdent, AminoAcid, AminoAcidGeneral, AminoAcidProtenationVariant, CodingResult,
 };
 

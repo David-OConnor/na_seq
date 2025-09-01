@@ -13,10 +13,10 @@ pub struct Nucleotide {
 
 #[pymethods]
 impl Nucleotide {
-    #[new]
-    fn new_from_letter(val: u8) -> PyResult<Self> {
+    #[classmethod]
+    fn from_str(_cls: &Bound<PyType>, s: &str) -> PyResult<Self> {
         Ok(Self {
-            inner: map_io(RsNucleotide::from_u8_letter(val))?,
+            inner: map_io(RsNucleotide::from_str(s))?,
         })
     }
 
@@ -24,13 +24,6 @@ impl Nucleotide {
     fn from_u8_letter(_cls: &Bound<PyType>, val: u8) -> PyResult<Self> {
         Ok(Self {
             inner: map_io(RsNucleotide::from_u8_letter(val))?,
-        })
-    }
-
-    #[classmethod]
-    fn from_str(_cls: &Bound<PyType>, s: &str) -> PyResult<Self> {
-        Ok(Self {
-            inner: map_io(RsNucleotide::from_str(s))?,
         })
     }
 
@@ -46,6 +39,7 @@ impl Nucleotide {
     fn to_str_lower(&self) -> String {
         self.inner.to_str_lower()
     }
+
     fn complement(&self) -> Self {
         Self {
             inner: self.inner.complement(),
@@ -67,10 +61,10 @@ impl Nucleotide {
     }
 
     fn __str__(&self) -> String {
-        self.inner.to_str_upper()
+        self.inner.to_string()
     }
     fn __repr__(&self) -> String {
-        format!("Nucleotide({})", self.inner.to_str_upper())
+        format!("{:?}", self.inner)
     }
 }
 
@@ -82,10 +76,10 @@ pub struct NucleotideGeneral {
 
 #[pymethods]
 impl NucleotideGeneral {
-    #[new]
-    fn new_from_letter(val: u8) -> PyResult<Self> {
+    #[classmethod]
+    fn from_str(_cls: &Bound<PyType>, s: &str) -> PyResult<Self> {
         Ok(Self {
-            inner: map_io(RsNucleotideGeneral::from_u8_letter(val))?,
+            inner: map_io(RsNucleotideGeneral::from_str(s))?,
         })
     }
 
@@ -96,16 +90,10 @@ impl NucleotideGeneral {
         })
     }
 
-    #[classmethod]
-    fn from_str(_cls: &Bound<PyType>, s: &str) -> PyResult<Self> {
-        Ok(Self {
-            inner: map_io(RsNucleotideGeneral::from_str(s))?,
-        })
-    }
-
     fn matches(&self, nt: &Nucleotide) -> bool {
         self.inner.matches(nt.inner)
     }
+
     fn to_u8_lower(&self) -> u8 {
         self.inner.to_u8_lower()
     }
@@ -125,9 +113,9 @@ impl NucleotideGeneral {
     }
 
     fn __str__(&self) -> String {
-        self.inner.to_str_upper()
+        self.inner.to_string()
     }
     fn __repr__(&self) -> String {
-        format!("NucleotideGeneral({})", self.inner.to_str_upper())
+        format!("{:?}", self.inner)
     }
 }

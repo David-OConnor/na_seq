@@ -133,7 +133,7 @@ impl Nucleotide {
 
 /// This includes both normal nucleotides, and "either" combinations of nucleotides.
 /// The u8 repr is for use with a binary format.
-#[derive(Clone, Copy, PartialEq, Eq, TryFromPrimitive)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, TryFromPrimitive)]
 #[repr(u8)]
 pub enum NucleotideGeneral {
     T = 0,

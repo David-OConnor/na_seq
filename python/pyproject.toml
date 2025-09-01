@@ -4,9 +4,9 @@ build-backend = "maturin"
 
 [project]
 name = "na_seq"
-description = "Python bindings for the na_seq library"
+description = "DNA, RNA, and amino acid sequence types and functions"
 requires-python = ">=3.10"
-authors = [{ name = "You" }]
+authors = [{ name = "David O'Connor", email = "the_alchemist@fastmail.com" }]
 readme = "README.md"
 license = { file = "LICENSE" }
 dynamic = ["version"]

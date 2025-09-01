@@ -10,13 +10,66 @@ pub enum AaIdent {
     ThreeLetters,
 }
 
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum CodingResult {
     AminoAcid(AminoAcid),
     StopCodon,
 }
 
-#[derive(Clone, Copy, PartialEq)]
+impl CodingResult {
+    pub fn from_codons(codons: [Nucleotide; 3]) -> Self {
+        // Handle cases that are defined entirely by the first two codons.
+        match codons[0..2] {
+            [C, G] => return Self::AminoAcid(AminoAcid::Arg),
+            [C, C] => return Self::AminoAcid(AminoAcid::Pro),
+            [C, T] => return Self::AminoAcid(AminoAcid::Leu),
+            [T, C] => return Self::AminoAcid(AminoAcid::Ser),
+            [G, G] => return Self::AminoAcid(AminoAcid::Gly),
+            [G, C] => return Self::AminoAcid(AminoAcid::Ala),
+            [G, T] => return Self::AminoAcid(AminoAcid::Val),
+            [A, C] => return Self::AminoAcid(AminoAcid::Thr),
+            _ => (),
+        }
+
+        match codons {
+            [A, T, G] => Self::AminoAcid(AminoAcid::Met),
+            [A, T, A] => Self::AminoAcid(AminoAcid::Ile),
+            [A, T, C] => Self::AminoAcid(AminoAcid::Ile),
+            [A, T, T] => Self::AminoAcid(AminoAcid::Ile),
+            [C, A, G] => Self::AminoAcid(AminoAcid::Gln),
+            [C, A, A] => Self::AminoAcid(AminoAcid::Gln),
+            [C, A, C] => Self::AminoAcid(AminoAcid::His),
+            [C, A, T] => Self::AminoAcid(AminoAcid::His),
+            [T, G, G] => Self::AminoAcid(AminoAcid::Trp),
+            [T, G, A] => CodingResult::StopCodon,
+            [T, G, C] => Self::AminoAcid(AminoAcid::Cys),
+            [T, G, T] => Self::AminoAcid(AminoAcid::Cys),
+            [T, A, G] => CodingResult::StopCodon,
+            [T, A, A] => CodingResult::StopCodon,
+            [T, A, C] => Self::AminoAcid(AminoAcid::Tyr),
+            [T, A, T] => Self::AminoAcid(AminoAcid::Tyr),
+            [T, T, G] => Self::AminoAcid(AminoAcid::Leu),
+            [T, T, A] => Self::AminoAcid(AminoAcid::Leu),
+            [T, T, C] => Self::AminoAcid(AminoAcid::Phe),
+            [T, T, T] => Self::AminoAcid(AminoAcid::Phe),
+            [G, A, G] => Self::AminoAcid(AminoAcid::Glu),
+            [G, A, A] => Self::AminoAcid(AminoAcid::Glu),
+            [G, A, C] => Self::AminoAcid(AminoAcid::Asp),
+            [G, A, T] => Self::AminoAcid(AminoAcid::Asp),
+            [A, G, G] => Self::AminoAcid(AminoAcid::Arg),
+            [A, G, A] => Self::AminoAcid(AminoAcid::Arg),
+            [A, G, C] => Self::AminoAcid(AminoAcid::Ser),
+            [A, G, T] => Self::AminoAcid(AminoAcid::Ser),
+            [A, A, G] => Self::AminoAcid(AminoAcid::Lys),
+            [A, A, A] => Self::AminoAcid(AminoAcid::Lys),
+            [A, A, C] => Self::AminoAcid(AminoAcid::Asn),
+            [A, A, T] => Self::AminoAcid(AminoAcid::Asn),
+            _ => unreachable!(), // This the 2-nt pattners we handled above.
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum AaCategory {
     Hydrophobic,
     Acidic,
@@ -221,6 +274,14 @@ impl AminoAcid {
         }
     }
 
+    /// Returns None if a Stop Codon.
+    pub fn from_codons(codons: [Nucleotide; 3]) -> Option<Self> {
+        match CodingResult::from_codons(codons) {
+            CodingResult::AminoAcid(aa) => Some(aa),
+            CodingResult::StopCodon => None
+        }
+    }
+
     /// https://en.wikipedia.org/wiki/DNA_and_RNA_codon_tables#/media/File:Aminoacids_table.svg
     /// If a codon has less than 3 nucleotides, it means the third can be any; this may have both conciseness,
     /// and performance advantages.
@@ -234,58 +295,6 @@ impl AminoAcid {
             Self::Leu => vec![vec![C, T]],
             Self::Met => vec![vec![A, T, G]],
             _ => Vec::new(),
-        }
-    }
-
-    // todo: Move to CodingResult?
-    pub fn from_codons(codons: [Nucleotide; 3]) -> CodingResult {
-        // Handle cases that are defined entirely by the first two codons.
-        match codons[0..2] {
-            [C, G] => return CodingResult::AminoAcid(Self::Arg),
-            [C, C] => return CodingResult::AminoAcid(Self::Pro),
-            [C, T] => return CodingResult::AminoAcid(Self::Leu),
-            [T, C] => return CodingResult::AminoAcid(Self::Ser),
-            [G, G] => return CodingResult::AminoAcid(Self::Gly),
-            [G, C] => return CodingResult::AminoAcid(Self::Ala),
-            [G, T] => return CodingResult::AminoAcid(Self::Val),
-            [A, C] => return CodingResult::AminoAcid(Self::Thr),
-            _ => (),
-        }
-
-        match codons {
-            [A, T, G] => CodingResult::AminoAcid(Self::Met),
-            [A, T, A] => CodingResult::AminoAcid(Self::Ile),
-            [A, T, C] => CodingResult::AminoAcid(Self::Ile),
-            [A, T, T] => CodingResult::AminoAcid(Self::Ile),
-            [C, A, G] => CodingResult::AminoAcid(Self::Gln),
-            [C, A, A] => CodingResult::AminoAcid(Self::Gln),
-            [C, A, C] => CodingResult::AminoAcid(Self::His),
-            [C, A, T] => CodingResult::AminoAcid(Self::His),
-            [T, G, G] => CodingResult::AminoAcid(Self::Trp),
-            [T, G, A] => CodingResult::StopCodon,
-            [T, G, C] => CodingResult::AminoAcid(Self::Cys),
-            [T, G, T] => CodingResult::AminoAcid(Self::Cys),
-            [T, A, G] => CodingResult::StopCodon,
-            [T, A, A] => CodingResult::StopCodon,
-            [T, A, C] => CodingResult::AminoAcid(Self::Tyr),
-            [T, A, T] => CodingResult::AminoAcid(Self::Tyr),
-            [T, T, G] => CodingResult::AminoAcid(Self::Leu),
-            [T, T, A] => CodingResult::AminoAcid(Self::Leu),
-            [T, T, C] => CodingResult::AminoAcid(Self::Phe),
-            [T, T, T] => CodingResult::AminoAcid(Self::Phe),
-            [G, A, G] => CodingResult::AminoAcid(Self::Glu),
-            [G, A, A] => CodingResult::AminoAcid(Self::Glu),
-            [G, A, C] => CodingResult::AminoAcid(Self::Asp),
-            [G, A, T] => CodingResult::AminoAcid(Self::Asp),
-            [A, G, G] => CodingResult::AminoAcid(Self::Arg),
-            [A, G, A] => CodingResult::AminoAcid(Self::Arg),
-            [A, G, C] => CodingResult::AminoAcid(Self::Ser),
-            [A, G, T] => CodingResult::AminoAcid(Self::Ser),
-            [A, A, G] => CodingResult::AminoAcid(Self::Lys),
-            [A, A, A] => CodingResult::AminoAcid(Self::Lys),
-            [A, A, C] => CodingResult::AminoAcid(Self::Asn),
-            [A, A, T] => CodingResult::AminoAcid(Self::Asn),
-            _ => unreachable!(), // This the 2-nt pattners we handled above.
         }
     }
 

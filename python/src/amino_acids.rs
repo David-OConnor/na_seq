@@ -18,28 +18,29 @@ pub struct AaIdent {
 
 #[pymethods]
 impl AaIdent {
-    #[classmethod]
-    fn from_str(_cls: &Bound<PyType>, s: &str) -> PyResult<Self> {
-        let val = match s {
-            "OneLetter" | "one" | "1" => RsAaIdent::OneLetter,
-            "ThreeLetters" | "three" | "3" => RsAaIdent::ThreeLetters,
-            _ => {
-                return Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(
-                    "invalid AaIdent",
-                ));
-            }
-        };
-        Ok(Self { inner: val })
+    fn __repr__(&self) -> String {
+        format!("{:?}", self.inner)
     }
+}
 
-    fn __str__(&self) -> &'static str {
-        match self.inner {
-            RsAaIdent::OneLetter => "OneLetter",
-            RsAaIdent::ThreeLetters => "ThreeLetters",
+#[pyclass(module = "na_seq")]
+#[derive(Clone, Copy)]
+pub struct CodingResult {
+    pub inner: RsCodingResult,
+}
+
+#[pymethods]
+impl CodingResult {
+    #[classmethod]
+    fn from_codons(_cls: &Bound<PyType>, codons: [Nucleotide; 3]) -> Self {
+        let codons_rs = codons.map(|c| c.inner);
+        Self {
+            inner: RsCodingResult::from_codons(codons_rs)
         }
     }
+
     fn __repr__(&self) -> String {
-        format!("AaIdent({})", self.__str__())
+        format!("{:?}", self.inner)
     }
 }
 
@@ -51,16 +52,8 @@ pub struct AaCategory {
 
 #[pymethods]
 impl AaCategory {
-    fn __str__(&self) -> &'static str {
-        match self.inner {
-            RsAaCategory::Hydrophobic => "Hydrophobic",
-            RsAaCategory::Acidic => "Acidic",
-            RsAaCategory::Basic => "Basic",
-            RsAaCategory::Polar => "Polar",
-        }
-    }
     fn __repr__(&self) -> String {
-        format!("AaCategory({})", self.__str__())
+        format!("{:?}", self.inner)
     }
 }
 
@@ -72,16 +65,10 @@ pub struct AminoAcid {
 
 #[pymethods]
 impl AminoAcid {
-    #[classmethod]
-    fn from_str(_cls: &Bound<PyType>, s: &str) -> PyResult<Self> {
-        Ok(Self {
-            inner: map_io(RsAminoAcid::from_str(s))?,
-        })
-    }
-
     fn to_str(&self, ident: &AaIdent) -> String {
         self.inner.to_str(ident.inner)
     }
+
     fn to_u8_upper(&self) -> u8 {
         self.inner.to_u8_upper()
     }
@@ -91,17 +78,19 @@ impl AminoAcid {
     fn to_str_offset(&self) -> String {
         self.inner.to_str_offset()
     }
+
+    #[classmethod]
+    fn from_str(_cls: &Bound<PyType>, s: &str) -> PyResult<Self> {
+        Ok(Self {
+            inner: map_io(RsAminoAcid::from_str(s))?,
+        })
+    }
+
     fn weight(&self) -> f32 {
         self.inner.weight()
     }
     fn hydropathicity(&self) -> f32 {
         self.inner.hydropathicity()
-    }
-
-    fn category(&self) -> AaCategory {
-        AaCategory {
-            inner: self.inner.category(),
-        }
     }
 
     fn codons(&self) -> Vec<Vec<Nucleotide>> {
@@ -117,14 +106,17 @@ impl AminoAcid {
     }
 
     #[classmethod]
-    fn from_codons(
-        _cls: &Bound<PyType>,
-        a: &Nucleotide,
-        b: &Nucleotide,
-        c: &Nucleotide,
-    ) -> CodingResult {
-        CodingResult {
-            inner: RsAminoAcid::from_codons([a.inner, b.inner, c.inner]),
+    fn from_codons(_cls: &Bound<PyType>, codons: [Nucleotide; 3]) -> Option<Self> {
+        let codons_rs = codons.map(|c| c.inner);
+        match RsAminoAcid::from_codons(codons_rs) {
+            Some(aa) => Some(Self { inner: aa }),
+            None => None,
+        }
+    }
+
+    fn category(&self) -> AaCategory {
+        AaCategory {
+            inner: self.inner.category(),
         }
     }
 
@@ -132,40 +124,7 @@ impl AminoAcid {
         self.inner.to_string()
     }
     fn __repr__(&self) -> String {
-        format!("AminoAcid({})", self.inner.to_string())
-    }
-}
-
-#[pyclass(module = "na_seq")]
-#[derive(Clone, Copy)]
-pub struct CodingResult {
-    pub inner: RsCodingResult,
-}
-
-#[pymethods]
-impl CodingResult {
-    fn is_stop(&self) -> bool {
-        matches!(self.inner, RsCodingResult::StopCodon)
-    }
-
-    fn amino_acid(&self) -> Option<AminoAcid> {
-        match self.inner {
-            RsCodingResult::AminoAcid(aa) => Some(AminoAcid { inner: aa }),
-            RsCodingResult::StopCodon => None,
-        }
-    }
-
-    fn __str__(&self) -> String {
-        match self.inner {
-            RsCodingResult::AminoAcid(aa) => format!("{}", aa.to_string()),
-            RsCodingResult::StopCodon => "StopCodon".to_string(),
-        }
-    }
-    fn __repr__(&self) -> String {
-        match self.inner {
-            RsCodingResult::AminoAcid(aa) => format!("CodingResult(AminoAcid({}))", aa.to_string()),
-            RsCodingResult::StopCodon => "CodingResult(StopCodon)".to_string(),
-        }
+        format!("{:?}", self.inner)
     }
 }
 
