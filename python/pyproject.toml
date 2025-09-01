@@ -7,8 +7,8 @@ name = "na_seq"
 description = "DNA, RNA, and amino acid sequence types and functions"
 requires-python = ">=3.10"
 authors = [{ name = "David O'Connor", email = "the_alchemist@fastmail.com" }]
-readme = "README.md"
-license = { file = "LICENSE" }
+readme = "PYPI_README.md"
+license = { file = "PYPI_LICENSE" }
 dynamic = ["version"]
 
 classifiers = [

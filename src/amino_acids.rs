@@ -278,7 +278,7 @@ impl AminoAcid {
     pub fn from_codons(codons: [Nucleotide; 3]) -> Option<Self> {
         match CodingResult::from_codons(codons) {
             CodingResult::AminoAcid(aa) => Some(aa),
-            CodingResult::StopCodon => None
+            CodingResult::StopCodon => None,
         }
     }
 

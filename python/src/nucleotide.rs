@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use na_seq_rs::{Nucleotide as RsNucleotide, NucleotideGeneral as RsNucleotideGeneral};
+use na_seq_rs;
 use pyo3::{prelude::*, types::PyType};
 
 use crate::map_io;
@@ -8,7 +8,7 @@ use crate::map_io;
 #[pyclass(module = "na_seq")]
 #[derive(Clone, Copy)]
 pub struct Nucleotide {
-    pub inner: RsNucleotide,
+    pub inner: na_seq_rs::Nucleotide,
 }
 
 #[pymethods]
@@ -16,14 +16,14 @@ impl Nucleotide {
     #[classmethod]
     fn from_str(_cls: &Bound<PyType>, s: &str) -> PyResult<Self> {
         Ok(Self {
-            inner: map_io(RsNucleotide::from_str(s))?,
+            inner: map_io(na_seq_rs::Nucleotide::from_str(s))?,
         })
     }
 
     #[classmethod]
     fn from_u8_letter(_cls: &Bound<PyType>, val: u8) -> PyResult<Self> {
         Ok(Self {
-            inner: map_io(RsNucleotide::from_u8_letter(val))?,
+            inner: map_io(na_seq_rs::Nucleotide::from_u8_letter(val))?,
         })
     }
 
@@ -71,7 +71,7 @@ impl Nucleotide {
 #[pyclass(module = "na_seq")]
 #[derive(Clone, Copy)]
 pub struct NucleotideGeneral {
-    pub inner: RsNucleotideGeneral,
+    pub inner: na_seq_rs::NucleotideGeneral,
 }
 
 #[pymethods]
@@ -79,14 +79,14 @@ impl NucleotideGeneral {
     #[classmethod]
     fn from_str(_cls: &Bound<PyType>, s: &str) -> PyResult<Self> {
         Ok(Self {
-            inner: map_io(RsNucleotideGeneral::from_str(s))?,
+            inner: map_io(na_seq_rs::NucleotideGeneral::from_str(s))?,
         })
     }
 
     #[classmethod]
     fn from_u8_letter(_cls: &Bound<PyType>, val: u8) -> PyResult<Self> {
         Ok(Self {
-            inner: map_io(RsNucleotideGeneral::from_u8_letter(val))?,
+            inner: map_io(na_seq_rs::NucleotideGeneral::from_u8_letter(val))?,
         })
     }
 

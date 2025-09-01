@@ -27,8 +27,6 @@ jobs:
           - runner: ubuntu-22.04
             target: x86_64
           - runner: ubuntu-22.04
-            target: x86
-          - runner: ubuntu-22.04
             target: aarch64
           - runner: ubuntu-22.04
             target: armv7
@@ -41,11 +39,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: 3.x
-      - name: Stage README/License for packaging
-        shell: bash
-        run: |
-          cp -f README.md python/README.md
-          cp -f LICENSE python/LICENSE
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -68,8 +61,6 @@ jobs:
           - runner: ubuntu-22.04
             target: x86_64
           - runner: ubuntu-22.04
-            target: x86
-          - runner: ubuntu-22.04
             target: aarch64
           - runner: ubuntu-22.04
             target: armv7
@@ -78,11 +69,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: 3.x
-      - name: Stage README/License for packaging
-        shell: bash
-        run: |
-          cp -f README.md python/README.md
-          cp -f LICENSE python/LICENSE
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -104,19 +90,12 @@ jobs:
         platform:
           - runner: windows-latest
             target: x64
-          - runner: windows-latest
-            target: x86
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: 3.x
           architecture: ${{ matrix.platform.target }}
-      - name: Stage README/License for packaging
-        shell: bash
-        run: |
-          cp -f README.md python/README.md
-          cp -f LICENSE python/LICENSE
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -144,11 +123,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: 3.x
-      - name: Stage README/License for packaging
-        shell: bash
-        run: |
-          cp -f README.md python/README.md
-          cp -f LICENSE python/LICENSE
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -166,11 +140,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Stage README/License for packaging
-        shell: bash
-        run: |
-          cp -f README.md python/README.md
-          cp -f LICENSE python/LICENSE
       - name: Build sdist
         uses: PyO3/maturin-action@v1
         with:
@@ -197,6 +166,11 @@ jobs:
       attestations: write
     steps:
       - uses: actions/download-artifact@v4
+        # We added this
+        with:
+          pattern: wheels-*           # matches wheels-linux-*, wheels-macos-*, wheels-sdist, etc.
+          merge-multiple: true        # puts everything into a single dir
+          path: dist                  # final folder containing all files
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
         with:
