@@ -1,0 +1,13 @@
+[package]
+name = "na_seq_py"
+version = "0.3.2"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+
+[dependencies]
+#na_seq_rs = { package = "na_seq", path = "../na_seq" }
+na_seq_rs = { package = "na_seq", version = "0.3.2" }
+pyo3 = { version = "0.26.0", features = ["extension-module", "abi3-py310"] }
