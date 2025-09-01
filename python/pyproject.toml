@@ -9,6 +9,7 @@ requires-python = ">=3.10"
 authors = [{ name = "David O'Connor", email = "the_alchemist@fastmail.com" }]
 readme = "PYPI_README.md"
 license = { file = "PYPI_LICENSE" }
+keywords = ["nucleotide", "element", "amino acid", "protein"]
 dynamic = ["version"]
 
 classifiers = [
