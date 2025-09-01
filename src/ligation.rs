@@ -14,7 +14,6 @@ pub struct LigationFragment {
     pub re_right: Option<RestrictionEnzyme>,
 }
 
-
 /// Digest the sequence with one or more REs.
 /// `matches` here is all matches; we filter by selected here.
 pub fn digest(
