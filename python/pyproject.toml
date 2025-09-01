@@ -12,10 +12,18 @@ license = { file = "PYPI_LICENSE" }
 dynamic = ["version"]
 
 classifiers = [
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Biology",
     "Programming Language :: Rust",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
+
+[project.urls]
+homepage = "https://github.com/David-OConnor/na_seq"
+repository = "https://github.com/David-OConnor/na_seq"
+documentation = "https://docs.rs/na_seq"
+
 
 [tool.maturin]
 # Using ABI3 allows for this to work on any Python version > 3.10; not just 3.10.
