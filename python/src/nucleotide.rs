@@ -11,6 +11,12 @@ pub struct Nucleotide {
     pub inner: na_seq_rs::Nucleotide,
 }
 
+impl Nucleotide {
+    pub fn from_native(n: na_seq_rs::Nucleotide) -> Self {
+        Self { inner: n }
+    }
+}
+
 #[pymethods]
 impl Nucleotide {
     #[classmethod]

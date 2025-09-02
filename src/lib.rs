@@ -89,6 +89,16 @@ pub fn seq_to_str_upper(seq: &[Nucleotide]) -> String {
     result
 }
 
+/// Convert a sequence of amino acids to bytes associated with UTF-8 letters. For compatibility with external libraries.
+pub fn seq_to_u8_lower(seq: &[Nucleotide]) -> Vec<u8> {
+    seq.iter().map(|nt| nt.to_u8_lower()).collect()
+}
+
+/// Convert a sequence to bytes associated with UTF-8 letters. For compatibility with external libraries.
+pub fn seq_to_u8_upper(seq: &[Nucleotide]) -> Vec<u8> {
+    seq.iter().map(|nt| nt.to_u8_upper()).collect()
+}
+
 /// Convert an amino acid sequence to string of single-letter idents.
 pub fn seq_aa_to_str(seq: &[AminoAcid]) -> String {
     let mut result = String::new();
@@ -100,24 +110,14 @@ pub fn seq_aa_to_str(seq: &[AminoAcid]) -> String {
     result
 }
 
-/// Convert a sequence to bytes associated with UTF-8 letters. For compatibility with external libraries.
-pub fn seq_to_u8_upper(seq: &[Nucleotide]) -> Vec<u8> {
-    seq.iter().map(|nt| nt.to_u8_upper()).collect()
-}
-
-/// Convert a sequence of amino acids to bytes associated with UTF-8 letters. For compatibility with external libraries.
-pub fn seq_to_u8_lower(seq: &[Nucleotide]) -> Vec<u8> {
-    seq.iter().map(|nt| nt.to_u8_lower()).collect()
+/// Convert a string to bytes associated with UTF-8 letters. For compatibility with external libraries.
+pub fn seq_aa_to_u8_lower(seq: &[AminoAcid]) -> Vec<u8> {
+    seq.iter().map(|aa| aa.to_u8_lower()).collect()
 }
 
 /// Convert a sequence of amino acids to bytes associated with UTF-8 letters. For compatibility with external libraries.
 pub fn seq_aa_to_u8_upper(seq: &[AminoAcid]) -> Vec<u8> {
     seq.iter().map(|aa| aa.to_u8_upper()).collect()
-}
-
-/// Convert a string to bytes associated with UTF-8 letters. For compatibility with external libraries.
-pub fn seq_aa_to_u8_lower(seq: &[AminoAcid]) -> Vec<u8> {
-    seq.iter().map(|aa| aa.to_u8_lower()).collect()
 }
 
 /// Sequence weight, in Daltons. Assumes single-stranded.

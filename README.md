@@ -34,6 +34,21 @@ aa.to_str(AaIdent.OneLetter)
 aa.to_str(AaIdent.ThreeLetters)
 
 Element.C.atomic_weight()
+
+
+seq = [Nucleotide.A, Nucleotide.T, Nucleotide.G, Nucleotide.C]
+
+seq_complement(seq)
+
+seq_from_str("ATGC")
+
+seq_to_str(seq)
+
+seq_aa_from_str("MKYS")
+
+seq_aa_to_str( #...)
+
+seq_weight(seq)
 ```
 
 

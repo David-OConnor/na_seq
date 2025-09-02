@@ -13,12 +13,106 @@ use pyo3::{
     Bound, Py, PyResult, Python, exceptions::PyValueError, prelude::*, pymodule, types::PyType,
 };
 
-use crate::amino_acids::{
-    AaCategory, AaIdent, AminoAcid, AminoAcidGeneral, AminoAcidProtenationVariant, CodingResult,
+use crate::{
+    amino_acids::{
+        AaCategory, AaIdent, AminoAcid, AminoAcidGeneral, AminoAcidProtenationVariant, CodingResult,
+    },
+    nucleotide::Nucleotide,
 };
 
 fn map_io<T>(r: std::io::Result<T>) -> PyResult<T> {
     r.map_err(|e| PyValueError::new_err(e.to_string()))
+}
+
+#[pyfunction]
+fn seq_complement(seq: Vec<Nucleotide>) -> Vec<Nucleotide> {
+    let seq_native: Vec<_> = seq.iter().map(|n| n.inner).collect();
+    na_seq_rs::seq_complement(&seq_native)
+        .into_iter()
+        .map(|n| Nucleotide::from_native(n))
+        .collect()
+}
+
+#[pyfunction]
+fn seq_from_str(str: &str) -> Vec<Nucleotide> {
+    na_seq_rs::seq_from_str(str)
+        .into_iter()
+        .map(|n| Nucleotide::from_native(n))
+        .collect()
+}
+
+#[pyfunction]
+fn seq_aa_from_str(str: &str) -> Vec<AminoAcid> {
+    na_seq_rs::seq_aa_from_str(str)
+        .into_iter()
+        .map(|n| AminoAcid::from_native(n))
+        .collect()
+}
+
+#[pyfunction]
+fn seq_to_str_lower(seq: Vec<Nucleotide>) -> String {
+    let seq_native: Vec<_> = seq.iter().map(|n| n.inner).collect();
+    na_seq_rs::seq_to_str_lower(&seq_native)
+}
+
+#[pyfunction]
+fn seq_to_str_upper(seq: Vec<Nucleotide>) -> String {
+    let seq_native: Vec<_> = seq.iter().map(|n| n.inner).collect();
+    na_seq_rs::seq_to_str_upper(&seq_native)
+}
+
+#[pyfunction]
+fn seq_to_u8_lower(seq: Vec<Nucleotide>) -> Vec<u8> {
+    let seq_native: Vec<_> = seq.iter().map(|n| n.inner).collect();
+    na_seq_rs::seq_to_u8_lower(&seq_native)
+}
+
+#[pyfunction]
+fn seq_to_u8_upper(seq: Vec<Nucleotide>) -> Vec<u8> {
+    let seq_native: Vec<_> = seq.iter().map(|n| n.inner).collect();
+    na_seq_rs::seq_to_u8_upper(&seq_native)
+}
+
+#[pyfunction]
+fn seq_aa_to_str(seq: Vec<AminoAcid>) -> String {
+    let seq_native: Vec<_> = seq.iter().map(|n| n.inner).collect();
+    na_seq_rs::seq_aa_to_str(&seq_native)
+}
+
+#[pyfunction]
+fn seq_aa_to_u8_lower(seq: Vec<AminoAcid>) -> Vec<u8> {
+    let seq_native: Vec<_> = seq.iter().map(|n| n.inner).collect();
+    na_seq_rs::seq_aa_to_u8_lower(&seq_native)
+}
+
+#[pyfunction]
+fn seq_aa_to_u8_upper(seq: Vec<AminoAcid>) -> Vec<u8> {
+    let seq_native: Vec<_> = seq.iter().map(|n| n.inner).collect();
+    na_seq_rs::seq_aa_to_u8_upper(&seq_native)
+}
+
+#[pyfunction]
+fn seq_weight(seq: Vec<Nucleotide>) -> f32 {
+    let seq_native: Vec<_> = seq.iter().map(|n| n.inner).collect();
+    na_seq_rs::seq_weight(&seq_native)
+}
+
+#[pyfunction]
+fn calc_gc(seq: Vec<Nucleotide>) -> f32 {
+    let seq_native: Vec<_> = seq.iter().map(|n| n.inner).collect();
+    na_seq_rs::calc_gc(&seq_native)
+}
+
+#[pyfunction]
+fn serialize_seq_bin(seq: Vec<Nucleotide>) -> Vec<u8> {
+    let seq_native: Vec<_> = seq.iter().map(|n| n.inner).collect();
+    na_seq_rs::serialize_seq_bin(&seq_native)
+}
+
+#[pyfunction]
+fn deser_seq_bin(data: Vec<u8>) -> PyResult<Vec<Nucleotide>> {
+    let result = map_io(na_seq_rs::deser_seq_bin(&data))?;
+    Ok(result.into_iter().map(|n| Nucleotide::from_native(n)).collect())
 }
 
 macro_rules! set_variant {
@@ -48,6 +142,25 @@ fn na_seq(py: Python<'_>, m: &Bound<PyModule>) -> PyResult<()> {
     m.add_class::<CodingResult>()?;
     m.add_class::<AminoAcidProtenationVariant>()?;
     m.add_class::<AminoAcidGeneral>()?;
+
+    m.add_function(wrap_pyfunction!(seq_complement, m)?)?;
+
+    m.add_function(wrap_pyfunction!(seq_from_str, m)?)?;
+    m.add_function(wrap_pyfunction!(seq_aa_from_str, m)?)?;
+
+    m.add_function(wrap_pyfunction!(seq_to_str_lower, m)?)?;
+    m.add_function(wrap_pyfunction!(seq_to_str_upper, m)?)?;
+    m.add_function(wrap_pyfunction!(seq_to_u8_lower, m)?)?;
+    m.add_function(wrap_pyfunction!(seq_to_u8_upper, m)?)?;
+
+    m.add_function(wrap_pyfunction!(seq_aa_to_str, m)?)?;
+    m.add_function(wrap_pyfunction!(seq_aa_to_u8_lower, m)?)?;
+    m.add_function(wrap_pyfunction!(seq_aa_to_u8_upper, m)?)?;
+    m.add_function(wrap_pyfunction!(seq_weight, m)?)?;
+    m.add_function(wrap_pyfunction!(calc_gc, m)?)?;
+
+    m.add_function(wrap_pyfunction!(serialize_seq_bin, m)?)?;
+    m.add_function(wrap_pyfunction!(deser_seq_bin, m)?)?;
 
     // Keep each intermediate alive to satisfy &Bound lifetimes
     let et_obj = m.getattr("Element")?;

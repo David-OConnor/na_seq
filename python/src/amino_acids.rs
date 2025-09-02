@@ -58,6 +58,12 @@ pub struct AminoAcid {
     pub inner: na_seq_rs::AminoAcid,
 }
 
+impl AminoAcid {
+    pub fn from_native(n: na_seq_rs::AminoAcid) -> Self {
+        Self { inner: n }
+    }
+}
+
 #[pymethods]
 impl AminoAcid {
     fn to_str(&self, ident: &AaIdent) -> String {
