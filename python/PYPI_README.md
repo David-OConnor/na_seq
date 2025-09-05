@@ -4,12 +4,12 @@
 [![Docs](https://docs.rs/na_seq/badge.svg)](https://docs.rs/na_seq)
 [![PyPI](https://img.shields.io/pypi/v/na-seq.svg)](https://pypi.org/project/na-seq)
 
-This Rust and Python library contains types and functions used for performing operations on DNA and amino acid sequences. 
-Its most fundamental types are the `Nucleotide` and `AminoAcid` enums, representing a single DNA nucleotide, 
-and single amino acid respectively. This library is general, and intended to be used by any program or library 
+This Rust and Python library contains types and functions used for performing operations on DNA and amino acid sequences.
+Its most fundamental types are the `Nucleotide` and `AminoAcid` enums, representing a single DNA nucleotide,
+and single amino acid respectively. This library is general, and intended to be used by any program or library
 that uses DNA sequences. It also includes an `Element` enum, with parameters associated with each element.
 
-It includes functions to convert between `&[Nucleotide]` to string and vice-versa, and convert to and from u8 
+It includes functions to convert between `&[Nucleotide]` to string and vice-versa, and convert to and from u8
 representations of the UTF-8 characters. It includes functions to serialize and deserialize in a compact binary
 format, with 2 bits per nucleotide.
 
@@ -34,6 +34,24 @@ aa.to_str(AaIdent.OneLetter)
 aa.to_str(AaIdent.ThreeLetters)
 
 Element.C.atomic_weight()
+
+seq = [Nucleotide.A, Nucleotide.T, Nucleotide.G, Nucleotide.C, Nucleotide.C]
+
+seq_complement(seq)
+# [G, G, C, A, T]
+
+seq_from_str("ATGC")
+# [A, T, G, C]
+
+seq_to_str_lower(seq)
+# 'atgc'
+
+seq_aa_from_str("MKYS")
+# [Met, Lys, Tyr, Ser]
+
+seq_aa_to_str( #...)
+
+seq_weight(seq)
 ```
 
 
@@ -46,7 +64,7 @@ Element.C.atomic_weight()
 
 We may add Sequence searches, and other utility features in the future.
 
-This library is used by the [PlasCAD](https://github.com/David-OConnor/plascad) plasmid editor and [Daedalus](https://github.com/David-OConnor/daedalus) 
+This library is used by the [PlasCAD](https://github.com/David-OConnor/plascad) plasmid editor and [Daedalus](https://github.com/David-OConnor/daedalus)
 molecule viewer.
 
 Note: The Python version currently does not include restriction-enzyme and ligation functionality.

@@ -20,6 +20,6 @@ exclude = [".gitignore"]
 
 
 [dependencies]
-num_enum = "0.7.3"  # reversing a u8-repr.
+num_enum = "0.7.4"  # reversing a u8-repr.
 
 bincode = "2.0.1"

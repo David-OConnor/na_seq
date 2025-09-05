@@ -22,7 +22,7 @@ See [the docs](https://docs.rs/na_seq) for details on data structures and functi
 
 Also includes restriction enzyme and ligation basics.
 
-Minmal python example. See the rust docs for full details:
+Minmal python example. See the rust docs for adetails:
 
 ```python
 from na_seq import *
@@ -35,16 +35,19 @@ aa.to_str(AaIdent.ThreeLetters)
 
 Element.C.atomic_weight()
 
-
-seq = [Nucleotide.A, Nucleotide.T, Nucleotide.G, Nucleotide.C]
+seq = [Nucleotide.A, Nucleotide.T, Nucleotide.G, Nucleotide.C, Nucleotide.C]
 
 seq_complement(seq)
+# [G, G, C, A, T]
 
 seq_from_str("ATGC")
+# [A, T, G, C]
 
-seq_to_str(seq)
+seq_to_str_lower(seq)
+# 'atgc'
 
 seq_aa_from_str("MKYS")
+# [Met, Lys, Tyr, Ser]
 
 seq_aa_to_str( #...)
 

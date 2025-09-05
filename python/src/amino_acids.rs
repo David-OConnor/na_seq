@@ -3,18 +3,13 @@ use std::str::FromStr;
 use na_seq_rs;
 use pyo3::{prelude::*, types::PyType};
 
-use crate::{Nucleotide, map_io};
+use crate::{Nucleotide, make_enum};
 
-#[pyclass(module = "na_seq")]
-#[derive(Clone, Copy)]
-pub struct AaIdent {
-    pub inner: na_seq_rs::AaIdent,
-}
-
+make_enum!(AaIdent, na_seq_rs::AaIdent, OneLetter, ThreeLetters);
 #[pymethods]
 impl AaIdent {
     fn __repr__(&self) -> String {
-        format!("{:?}", self.inner)
+        format!("{:?}", self.to_native())
     }
 }
 
@@ -28,7 +23,7 @@ pub struct CodingResult {
 impl CodingResult {
     #[classmethod]
     fn from_codons(_cls: &Bound<PyType>, codons: [Nucleotide; 3]) -> Self {
-        let codons_rs = codons.map(|c| c.inner);
+        let codons_rs = codons.map(|c| c.into());
         Self {
             inner: na_seq_rs::CodingResult::from_codons(codons_rs),
         }
@@ -39,120 +34,138 @@ impl CodingResult {
     }
 }
 
-#[pyclass(module = "na_seq")]
-#[derive(Clone, Copy)]
-pub struct AaCategory {
-    pub inner: na_seq_rs::AaCategory,
-}
+make_enum!(
+    AaCategory,
+    na_seq_rs::AaCategory,
+    Hydrophobic,
+    Acidic,
+    Basic,
+    Polar
+);
 
 #[pymethods]
 impl AaCategory {
     fn __repr__(&self) -> String {
-        format!("{:?}", self.inner)
+        format!("{:?}", self.to_native())
     }
 }
 
-#[pyclass(module = "na_seq")]
-#[derive(Clone, Copy)]
-pub struct AminoAcid {
-    pub inner: na_seq_rs::AminoAcid,
-}
-
-impl AminoAcid {
-    pub fn from_native(n: na_seq_rs::AminoAcid) -> Self {
-        Self { inner: n }
-    }
-}
+make_enum!(
+    AminoAcid,
+    na_seq_rs::AminoAcid,
+    Arg,
+    His,
+    Lys,
+    Asp,
+    Glu,
+    Ser,
+    Thr,
+    Asn,
+    Gln,
+    Cys,
+    Sec,
+    Gly,
+    Pro,
+    Ala,
+    Val,
+    Ile,
+    Leu,
+    Met,
+    Phe,
+    Tyr,
+    Trp,
+);
 
 #[pymethods]
 impl AminoAcid {
     fn to_str(&self, ident: &AaIdent) -> String {
-        self.inner.to_str(ident.inner)
+        self.to_native().to_str(ident.to_native())
     }
 
     fn to_u8_upper(&self) -> u8 {
-        self.inner.to_u8_upper()
+        self.to_native().to_u8_upper()
     }
     fn to_u8_lower(&self) -> u8 {
-        self.inner.to_u8_lower()
+        self.to_native().to_u8_lower()
     }
     fn to_str_offset(&self) -> String {
-        self.inner.to_str_offset()
+        self.to_native().to_str_offset()
     }
 
     #[classmethod]
     fn from_str(_cls: &Bound<PyType>, s: &str) -> PyResult<Self> {
-        Ok(Self {
-            inner: map_io(na_seq_rs::AminoAcid::from_str(s))?,
-        })
+        Ok(na_seq_rs::AminoAcid::from_str(s)?.into())
     }
 
     fn weight(&self) -> f32 {
-        self.inner.weight()
+        self.to_native().weight()
     }
     fn hydropathicity(&self) -> f32 {
-        self.inner.hydropathicity()
+        self.to_native().hydropathicity()
     }
 
     fn codons(&self) -> Vec<Vec<Nucleotide>> {
-        self.inner
+        self.to_native()
             .codons()
             .into_iter()
-            .map(|row| {
-                row.into_iter()
-                    .map(|nt: na_seq_rs::Nucleotide| Nucleotide { inner: nt })
-                    .collect()
-            })
+            .map(|row| row.into_iter().map(|nt| nt.into()).collect())
             .collect()
     }
 
     #[classmethod]
     fn from_codons(_cls: &Bound<PyType>, codons: [Nucleotide; 3]) -> Option<Self> {
-        let codons_rs = codons.map(|c| c.inner);
+        let codons_rs = codons.map(|c| c.to_native());
         match na_seq_rs::AminoAcid::from_codons(codons_rs) {
-            Some(aa) => Some(Self { inner: aa }),
+            Some(aa) => Some(aa.into()),
             None => None,
         }
     }
 
     fn category(&self) -> AaCategory {
-        AaCategory {
-            inner: self.inner.category(),
-        }
+        self.to_native().category().into()
     }
 
     fn __str__(&self) -> String {
-        self.inner.to_string()
+        self.to_native().to_string()
     }
     fn __repr__(&self) -> String {
-        format!("{:?}", self.inner)
+        format!("{:?}", self.to_native())
     }
 }
 
-#[pyclass(module = "na_seq")]
-#[derive(Clone, Copy)]
-pub struct AminoAcidProtenationVariant {
-    pub inner: na_seq_rs::AminoAcidProtenationVariant,
-}
+make_enum!(
+    AminoAcidProtenationVariant,
+    na_seq_rs::AminoAcidProtenationVariant,
+    Hid,
+    Hie,
+    Hip,
+    Cym,
+    Cyx,
+    Ash,
+    Glh,
+    Lyn,
+    Ace,
+    Nhe,
+    Nme,
+    Hyp,
+);
 
 #[pymethods]
 impl AminoAcidProtenationVariant {
     #[classmethod]
     fn from_str(_cls: &Bound<PyType>, s: &str) -> PyResult<Self> {
-        Ok(Self {
-            inner: map_io(na_seq_rs::AminoAcidProtenationVariant::from_str(s))?,
-        })
+        Ok(na_seq_rs::AminoAcidProtenationVariant::from_str(s)?.into())
     }
 
     fn get_standard(&self) -> Option<AminoAcid> {
-        self.inner.get_standard().map(|aa| AminoAcid { inner: aa })
+        self.to_native().get_standard().map(|aa| aa.into())
     }
 
     fn __str__(&self) -> String {
-        self.inner.to_string()
+        self.to_native().to_string()
     }
     fn __repr__(&self) -> String {
-        format!("AminoAcidProtenationVariant({})", self.inner.to_string())
+        format!("{:?}", self.to_native().to_string())
     }
 }
 
@@ -167,21 +180,21 @@ impl AminoAcidGeneral {
     #[classmethod]
     fn from_str(_cls: &Bound<PyType>, s: &str) -> PyResult<Self> {
         Ok(Self {
-            inner: map_io(na_seq_rs::AminoAcidGeneral::from_str(s))?,
+            inner: na_seq_rs::AminoAcidGeneral::from_str(s)?,
         })
     }
 
     #[classmethod]
     fn from_standard(_cls: &Bound<PyType>, aa: &AminoAcid) -> Self {
         Self {
-            inner: na_seq_rs::AminoAcidGeneral::Standard(aa.inner),
+            inner: na_seq_rs::AminoAcidGeneral::Standard(aa.to_native()).into(),
         }
     }
 
     #[classmethod]
     fn from_variant(_cls: &Bound<PyType>, v: &AminoAcidProtenationVariant) -> Self {
         Self {
-            inner: na_seq_rs::AminoAcidGeneral::Variant(v.inner),
+            inner: na_seq_rs::AminoAcidGeneral::Variant(v.to_native()),
         }
     }
 
@@ -195,10 +208,8 @@ impl AminoAcidGeneral {
 
     fn to_standard(&self) -> Option<AminoAcid> {
         match self.inner {
-            na_seq_rs::AminoAcidGeneral::Standard(aa) => Some(AminoAcid { inner: aa }),
-            na_seq_rs::AminoAcidGeneral::Variant(v) => {
-                v.get_standard().map(|aa| AminoAcid { inner: aa })
-            }
+            na_seq_rs::AminoAcidGeneral::Standard(aa) => Some(aa.into()),
+            na_seq_rs::AminoAcidGeneral::Variant(v) => v.get_standard().map(|aa| aa.into()),
         }
     }
 
