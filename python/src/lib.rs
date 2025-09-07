@@ -44,6 +44,22 @@ macro_rules! make_enum {
     };
 }
 
+/// Candidate for standalone helper lib.
+macro_rules! field {
+    ($name:ident, $ty:ty) => {
+        #[getter]
+        fn $name(&self) -> $ty {
+            self.inner.$name.into()
+        }
+
+        #[setter($name)]
+        fn $name##_set(&mut self, val: $ty) -> $ty {
+            self.inner.$name = val.into();
+            val
+        }
+    };
+}
+
 macro_rules! set_variant {
     ($py:expr, $class:expr, $Wrapper:ident, $RsEnum:ident, $name:ident, $alias:expr) => {{
         let obj = Py::new(
