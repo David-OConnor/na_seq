@@ -164,7 +164,7 @@ impl Element {
             Manganese => (0.541, 1., 0.541),
             Iodine => (0.580, 0., 0.580),
             // Too similar to carbon; modded.
-            Chlorine => (0.300, 0.941, 0.121),
+            Chlorine => (0.300, 0.800, 0.121),
             Tungsten => (0.129, 0.580, 0.840),
             Tellurium => (0.831, 0.478, 0.),
             Selenium => (1.0, 0.631, 0.),
