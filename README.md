@@ -4,8 +4,10 @@
 [![Docs](https://docs.rs/na_seq/badge.svg)](https://docs.rs/na_seq)
 [![PyPI](https://img.shields.io/pypi/v/na-seq.svg)](https://pypi.org/project/na-seq)
 
-This Rust and Python library contains types and functions used for performing operations on DNA and amino acid sequences. 
-Its most fundamental types are the `Nucleotide` and `AminoAcid` enums, representing a single DNA nucleotide, 
+[Home page](https://www.athanorlab.com/rust-tools)
+
+This Rust and Python library contains types and functions used for performing operations on DNA, RNA,
+and amino acid sequences. Its most fundamental types are the `Nucleotide` and `AminoAcid` enums, representing a single DNA nucleotide, 
 and single amino acid respectively. This library is general, and intended to be used by any program or library 
 that uses DNA sequences. It also includes an `Element` enum, with parameters associated with each element.
 
@@ -50,6 +52,10 @@ seq_aa_from_str("MKYS")
 # [Met, Lys, Tyr, Ser]
 
 seq_aa_to_str( #...)
+
+
+el = Element.Carbon
+el.atomic_weight()
 
 seq_weight(seq)
 ```
