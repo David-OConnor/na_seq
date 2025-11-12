@@ -281,6 +281,44 @@ impl Element {
         }
     }
 
+    pub fn from_atomic_number(num: u8) -> io::Result<Self> {
+        Ok(match num {
+            1 => Hydrogen,
+            6 => Carbon,
+            7 => Nitrogen,
+            8 => Oxygen,
+            9 => Fluorine,
+            12 => Magnesium,
+            13 => Aluminum,
+            15 => Phosphorus,
+            16 => Sulfur,
+            17 => Chlorine,
+            19 => Potassium,
+            20 => Calcium,
+            25 => Manganese,
+            26 => Iron,
+            29 => Copper,
+            30 => Zinc,
+            34 => Selenium,
+            35 => Bromine,
+            37 => Rubidium,
+            47 => Silver,
+            50 => Tin,
+            52 => Tellurium,
+            53 => Iodine,
+            74 => Tungsten,
+            79 => Gold,
+            80 => Mercury,
+            82 => Lead,
+            _ => {
+                return Err(io::Error::new(
+                    ErrorKind::InvalidData,
+                    "Invalid atomic number or element we didn't add yet.",
+                ));
+            }
+        })
+    }
+
     /// Standard atomic weight (in atomic mass units) for each element.
     pub fn atomic_weight(&self) -> f32 {
         match self {
