@@ -489,3 +489,34 @@ impl FromStr for AminoAcidGeneral {
         }
     }
 }
+
+/// Calculates the Kyte-Doolittle value of Hydropathy index. Uses per-AA
+/// experimentally-determined hydrophobicity values, averaged over a moving window.
+///
+/// https://web.expasy.org/protscale/
+pub fn hydropathy_doolittle(seq: &[AminoAcid], window_size: usize) -> Vec<(usize, f32)> {
+    if window_size % 2 == 0 {
+        eprintln!("Window size for KD must be odd");
+        return Vec::new();
+    }
+    let mut result = Vec::new();
+
+    let win_div_2 = window_size / 2; // Rounds down.
+
+    if win_div_2 - 1 >= seq.len() {
+        eprintln!("Error with window size for hydropathy");
+        return result;
+    }
+
+    // We'll center each window on `i`.
+    for i in win_div_2..seq.len() - win_div_2 - 1 {
+        let aas = &seq[i - win_div_2..i + win_div_2 + 1];
+        let mut val_this_window = 0.;
+        for aa in aas {
+            val_this_window += aa.hydropathicity();
+        }
+        result.push((i, val_this_window / window_size as f32));
+    }
+
+    result
+}
