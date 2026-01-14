@@ -352,6 +352,60 @@ impl Element {
             Other => 0.0, // fallback for unknowns
         }
     }
+
+    // todo: Not complete.
+    pub fn valence_electrons(&self) -> usize {
+        match self {
+            // Group 1
+            Hydrogen => 1,
+            // Lithium => 1,
+            // Sodium => 1,
+            Potassium => 1,
+
+            // Group 2
+            // Beryllium => 2,
+            Magnesium => 2,
+            Calcium => 2,
+
+            // Group 13
+            // Boron => 3,
+            Aluminum => 3,
+
+            // Group 14
+            Carbon => 4,
+            // Silicon => 4,
+
+            // Group 15
+            Nitrogen => 5,
+            Phosphorus => 5,
+            // Arsenic => 5,
+
+            // Group 16
+            Oxygen => 6,
+            Sulfur => 6,
+            Selenium => 6,
+
+            // Group 17 (halogens)
+            Fluorine => 7,
+            Chlorine => 7,
+            Bromine => 7,
+            Iodine => 7,
+
+            // Group 18 (noble gases — usually nonbonding)
+            // Helium => 8,
+            // Neon => 8,
+            // Argon => 8,
+            // Krypton => 8,
+            // Xenon => 8,
+
+            // Common bio / coordination metals
+            Zinc => 2,
+            Copper => 1, // Cu(I) dominant in organic/biological contexts
+            Iron => 2,   // Fe(II) common; varies but 2 is a reasonable default
+
+            _ => 0,
+        }
+    }
 }
 
 impl fmt::Display for Element {
