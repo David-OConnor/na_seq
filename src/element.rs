@@ -32,6 +32,7 @@ pub enum Element {
     Selenium,
     Bromine,
     Rubidium,
+    Silicon,
     Other,
 }
 
@@ -65,6 +66,7 @@ impl Element {
             "SE" => Ok(Selenium),
             "BR" => Ok(Bromine),
             "RU" => Ok(Rubidium),
+            "SI" => Ok(Silicon),
             // todo: Fill in if you need, or remove this fn.
             _ => Err(io::Error::new(
                 ErrorKind::InvalidData,
@@ -102,6 +104,7 @@ impl Element {
             Selenium => "Se".into(),
             Bromine => "Br".into(),
             Rubidium => "Ru".into(),
+            Silicon => "Si".into(),
             Other => "X".into(),
         }
     }
@@ -135,6 +138,7 @@ impl Element {
             Selenium => 2,  // can also be 4 or 6, pick 2
             Bromine => 7,
             Rubidium => 1,
+            Silicon => 4,
             Other => 0, // default to 0 for unknown or unhandled elements
         }
     }
@@ -170,6 +174,7 @@ impl Element {
             Selenium => (1.0, 0.631, 0.),
             Bromine => (1.0, 0.99, 0.),
             Rubidium => (0.439, 0.180, 0.690),
+            Silicon => (1., 1., 1.),
             Other => (5., 5., 5.),
         }
     }
@@ -207,6 +212,7 @@ impl Element {
             Selenium   => 1.20,
             Bromine  => 1.14, // 1.14 - 1.20
             Rubidium  => 2.20,
+            Silicon => 1.11,
             Other      => 0.00,
         }
     }
@@ -244,6 +250,7 @@ impl Element {
             Selenium   => 1.90,
             Bromine   => 1.85,
             Rubidium   => 3.21,
+            Silicon => 2.10,
             Other      => 0.0,
         }
     }
@@ -277,6 +284,7 @@ impl Element {
             Selenium => 34,
             Bromine => 35,
             Rubidium => 37,
+            Silicon => 14,
             Other => 20, // fallback
         }
     }
@@ -290,6 +298,7 @@ impl Element {
             9 => Fluorine,
             12 => Magnesium,
             13 => Aluminum,
+            14 => Silicon,
             15 => Phosphorus,
             16 => Sulfur,
             17 => Chlorine,
@@ -349,12 +358,13 @@ impl Element {
             Selenium => 78.971,
             Bromine => 79.904,
             Rubidium => 85.468,
+            Silicon => 28.085,
             Other => 0.0, // fallback for unknowns
         }
     }
 
     // todo: Not complete.
-    pub fn valence_electrons(&self) -> usize {
+    pub const fn valence_electrons(&self) -> usize {
         match self {
             // Group 1
             Hydrogen => 1,
@@ -402,6 +412,7 @@ impl Element {
             Zinc => 2,
             Copper => 1, // Cu(I) dominant in organic/biological contexts
             Iron => 2,   // Fe(II) common; varies but 2 is a reasonable default
+            Silicon => 4,
 
             _ => 0,
         }
@@ -438,6 +449,7 @@ impl fmt::Display for Element {
             Selenium => "Selenium",
             Bromine => "Bromine",
             Rubidium => "Rubidium",
+            Silicon => "Silicon",
             Other => "Other",
         };
 
