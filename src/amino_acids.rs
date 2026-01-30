@@ -283,18 +283,53 @@ impl AminoAcid {
     }
 
     /// https://en.wikipedia.org/wiki/DNA_and_RNA_codon_tables#/media/File:Aminoacids_table.svg
-    /// If a codon has less than 3 nucleotides, it means the third can be any; this may have both conciseness,
+    /// Returns a Vec of all combinations of condos which can make up the amino acid.
+    ///
+    /// If a resulting codon has less than 3 nucleotides, it means the third can be any; this may have both conciseness,
     /// and performance advantages.
     pub fn codons(&self) -> Vec<Vec<Nucleotide>> {
         match self {
-            // todo: Should we do wildcards etc, to speed up matching? Ie Arg is just [C, G].
-            Self::Arg => vec![vec![C, G]],
+            Self::Ala => vec![vec![G, C]],
+
+            Self::Arg => vec![
+                vec![C, G],    // CGN
+                vec![A, G, A], // AGA
+                vec![A, G, G], // AGG
+            ],
+
+            Self::Asn => vec![vec![A, A, T], vec![A, A, C]],
+            Self::Asp => vec![vec![G, A, T], vec![G, A, C]],
+            Self::Cys => vec![vec![T, G, T], vec![T, G, C]],
             Self::Gln => vec![vec![C, A, G], vec![C, A, A]],
+            Self::Glu => vec![vec![G, A, A], vec![G, A, G]],
+            Self::Gly => vec![vec![G, G]],
+
             Self::His => vec![vec![C, A, C], vec![C, A, T]],
-            Self::Pro => vec![vec![C, C]],
-            Self::Leu => vec![vec![C, T]],
+
+            Self::Ile => vec![vec![A, T, T], vec![A, T, C], vec![A, T, A]],
+
+            Self::Leu => vec![
+                vec![C, T],    // CTN
+                vec![T, T, A], // TTA
+                vec![T, T, G], // TTG
+            ],
+
+            Self::Lys => vec![vec![A, A, A], vec![A, A, G]],
             Self::Met => vec![vec![A, T, G]],
-            _ => Vec::new(),
+            Self::Phe => vec![vec![T, T, T], vec![T, T, C]],
+            Self::Pro => vec![vec![C, C]],
+
+            Self::Ser => vec![
+                vec![T, C],    // TCN
+                vec![A, G, T], // AGT
+                vec![A, G, C], // AGC
+            ],
+
+            Self::Thr => vec![vec![A, C]],
+            Self::Trp => vec![vec![T, G, G]],
+            Self::Tyr => vec![vec![T, A, T], vec![T, A, C]],
+            Self::Val => vec![vec![G, T]],
+            Self::Sec => unimplemented!(),
         }
     }
 
@@ -496,7 +531,7 @@ impl FromStr for AminoAcidGeneral {
 ///
 /// https://web.expasy.org/protscale/
 pub fn hydropathy_doolittle(seq: &[AminoAcid], window_size: usize) -> Vec<(usize, f32)> {
-    if window_size % 2 == 0 {
+    if window_size.is_multiple_of(2) {
         eprintln!("Window size for KD must be odd");
         return Vec::new();
     }
@@ -504,7 +539,7 @@ pub fn hydropathy_doolittle(seq: &[AminoAcid], window_size: usize) -> Vec<(usize
 
     let win_div_2 = window_size / 2; // Rounds down.
 
-    if win_div_2 - 1 >= seq.len() {
+    if win_div_2 > seq.len() {
         eprintln!("Error with window size for hydropathy");
         return result;
     }

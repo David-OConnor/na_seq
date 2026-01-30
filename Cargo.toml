@@ -1,6 +1,6 @@
 [package]
 name = "na_seq"
-version = "0.3.12"
+version = "0.3.13"
 edition = "2024"
 authors = ["David O'Connor <the_alchemist@fastmail.com>"]
 description = "DNA, RNA, and amino acid sequence types and functions"
@@ -20,6 +20,6 @@ exclude = [".gitignore"]
 
 
 [dependencies]
-num_enum = "0.7.4"  # reversing a u8-repr.
+num_enum = "0.7.5"  # reversing a u8-repr.
 
 bincode = "2.0.1"

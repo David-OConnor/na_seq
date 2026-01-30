@@ -134,14 +134,14 @@ pub fn ligate(fragments: &[LigationFragment]) -> Vec<Seq> {
 
             // Match complements on the same diagonal: top left-to-top-left
             for frag_2 in fragments {
-                if let Some(re_2_l) = &frag_2.re_left {
-                    if re_2_l.overhang_top_left(&frag.seq[0..1]) == nt_overhang_a {
-                        // todo: You must update this.
-                        // result.push(&frag.seq.iter().chain(&frag_2.seq.iter()).collect());
-                        let mut ligated = frag.seq.clone();
-                        ligated.extend(frag_2.seq.clone());
-                        result.push(ligated);
-                    }
+                if let Some(re_2_l) = &frag_2.re_left
+                    && re_2_l.overhang_top_left(&frag.seq[0..1]) == nt_overhang_a
+                {
+                    // todo: You must update this.
+                    // result.push(&frag.seq.iter().chain(&frag_2.seq.iter()).collect());
+                    let mut ligated = frag.seq.clone();
+                    ligated.extend(frag_2.seq.clone());
+                    result.push(ligated);
                 }
             }
         }

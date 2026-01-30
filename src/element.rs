@@ -33,6 +33,12 @@ pub enum Element {
     Bromine,
     Rubidium,
     Silicon,
+    Sodium,
+    Indium,
+    Titanium,
+    Barium,
+    Molybdenum,
+    Boron,
     Other,
 }
 
@@ -67,6 +73,12 @@ impl Element {
             "BR" => Ok(Bromine),
             "RU" => Ok(Rubidium),
             "SI" => Ok(Silicon),
+            "NA" => Ok(Sodium),
+            "IN" => Ok(Indium),
+            "TI" => Ok(Titanium),
+            "BA" => Ok(Barium),
+            "MO" => Ok(Molybdenum),
+            "B" => Ok(Boron),
             // todo: Fill in if you need, or remove this fn.
             _ => Err(io::Error::new(
                 ErrorKind::InvalidData,
@@ -105,6 +117,12 @@ impl Element {
             Bromine => "Br".into(),
             Rubidium => "Ru".into(),
             Silicon => "Si".into(),
+            Sodium => "Na".into(),
+            Indium => "In".into(),
+            Titanium => "Ti".into(),
+            Barium => "Ba".into(),
+            Molybdenum => "Mo".into(),
+            Boron => "B".into(),
             Other => "X".into(),
         }
     }
@@ -139,6 +157,12 @@ impl Element {
             Bromine => 7,
             Rubidium => 1,
             Silicon => 4,
+            Sodium => 1,
+            Indium => 3,
+            Titanium => 4,
+            Barium => 2,
+            Molybdenum => 6,
+            Boron => 3,
             Other => 0, // default to 0 for unknown or unhandled elements
         }
     }
@@ -175,7 +199,9 @@ impl Element {
             Bromine => (1.0, 0.99, 0.),
             Rubidium => (0.439, 0.180, 0.690),
             Silicon => (1., 1., 1.),
+            Sodium => (0.502, 0.502, 0.502),
             Other => (5., 5., 5.),
+            _ => (5., 5., 5.),
         }
     }
 
@@ -213,6 +239,12 @@ impl Element {
             Bromine  => 1.14, // 1.14 - 1.20
             Rubidium  => 2.20,
             Silicon => 1.11,
+            Sodium => 1.66,
+            Indium => 1.42,
+            Titanium => 1.60,
+            Barium => 2.15,
+            Molybdenum => 1.53,
+            Boron => 0.84,
             Other      => 0.00,
         }
     }
@@ -251,6 +283,12 @@ impl Element {
             Bromine   => 1.85,
             Rubidium   => 3.21,
             Silicon => 2.10,
+            Sodium => 2.27,
+            Indium => 1.93,
+            Titanium => 0., // N/A?
+            Barium => 2.68,
+            Molybdenum => 0.,// N/A?
+            Boron => 1.92,
             Other      => 0.0,
         }
     }
@@ -285,6 +323,12 @@ impl Element {
             Bromine => 35,
             Rubidium => 37,
             Silicon => 14,
+            Sodium => 11,
+            Indium => 49,
+            Titanium => 22,
+            Barium => 56,
+            Molybdenum => 42,
+            Boron => 5,
             Other => 20, // fallback
         }
     }
@@ -296,6 +340,7 @@ impl Element {
             7 => Nitrogen,
             8 => Oxygen,
             9 => Fluorine,
+            11 => Sodium,
             12 => Magnesium,
             13 => Aluminum,
             14 => Silicon,
@@ -359,6 +404,12 @@ impl Element {
             Bromine => 79.904,
             Rubidium => 85.468,
             Silicon => 28.085,
+            Sodium => 22.9898,
+            Indium => 114.818,
+            Titanium => 47.867,
+            Barium => 137.327,
+            Molybdenum => 95.95,
+            Boron => 10.806,
             Other => 0.0, // fallback for unknowns
         }
     }
@@ -413,6 +464,11 @@ impl Element {
             Copper => 1, // Cu(I) dominant in organic/biological contexts
             Iron => 2,   // Fe(II) common; varies but 2 is a reasonable default
             Silicon => 4,
+            Sodium => 1,
+            Indium => 3,
+            Titanium => 4,
+            Barium => 2,
+            Molybdenum => 6,
 
             _ => 0,
         }
@@ -450,6 +506,12 @@ impl fmt::Display for Element {
             Bromine => "Bromine",
             Rubidium => "Rubidium",
             Silicon => "Silicon",
+            Sodium => "Sodium",
+            Indium => "Indium",
+            Titanium => "Titanium",
+            Barium => "Barium",
+            Molybdenum => "Molybdenum",
+            Boron => "Boron",
             Other => "Other",
         };
 
