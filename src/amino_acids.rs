@@ -104,52 +104,54 @@ pub enum AminoAcid {
 
 impl AminoAcid {
     pub fn to_str(&self, ident: AaIdent) -> String {
+        use AminoAcid::*;
+        
         match ident {
             AaIdent::OneLetter => match self {
-                Self::Arg => "R",
-                Self::His => "H",
-                Self::Lys => "K",
-                Self::Asp => "D",
-                Self::Glu => "E",
-                Self::Ser => "S",
-                Self::Thr => "T",
-                Self::Asn => "N",
-                Self::Gln => "Q",
-                Self::Cys => "C",
-                Self::Sec => "U",
-                Self::Gly => "G",
-                Self::Pro => "P",
-                Self::Ala => "A",
-                Self::Val => "V",
-                Self::Ile => "I",
-                Self::Leu => "L",
-                Self::Met => "M",
-                Self::Phe => "F",
-                Self::Tyr => "Y",
-                Self::Trp => "W",
+                Arg => "R",
+                His => "H",
+                Lys => "K",
+                Asp => "D",
+                Glu => "E",
+                Ser => "S",
+                Thr => "T",
+                Asn => "N",
+                Gln => "Q",
+                Cys => "C",
+                Sec => "U",
+                Gly => "G",
+                Pro => "P",
+                Ala => "A",
+                Val => "V",
+                Ile => "I",
+                Leu => "L",
+                Met => "M",
+                Phe => "F",
+                Tyr => "Y",
+                Trp => "W",
             },
             AaIdent::ThreeLetters => match self {
-                Self::Arg => "Arg",
-                Self::His => "His",
-                Self::Lys => "Lys",
-                Self::Asp => "Asp",
-                Self::Glu => "Glu",
-                Self::Ser => "Ser",
-                Self::Thr => "Thr",
-                Self::Asn => "Asn",
-                Self::Gln => "Gln",
-                Self::Cys => "Cys",
-                Self::Sec => "Sec",
-                Self::Gly => "Gly",
-                Self::Pro => "Pro",
-                Self::Ala => "Ala",
-                Self::Val => "Val",
-                Self::Ile => "Ile",
-                Self::Leu => "Leu",
-                Self::Met => "Met",
-                Self::Phe => "Phe",
-                Self::Tyr => "Tyr",
-                Self::Trp => "Trp",
+                Arg => "Arg",
+                His => "His",
+                Lys => "Lys",
+                Asp => "Asp",
+                Glu => "Glu",
+                Ser => "Ser",
+                Thr => "Thr",
+                Asn => "Asn",
+                Gln => "Gln",
+                Cys => "Cys",
+                Sec => "Sec",
+                Gly => "Gly",
+                Pro => "Pro",
+                Ala => "Ala",
+                Val => "Val",
+                Ile => "Ile",
+                Leu => "Leu",
+                Met => "Met",
+                Phe => "Phe",
+                Tyr => "Tyr",
+                Trp => "Trp",
             },
         }
         .to_owned()
@@ -157,55 +159,57 @@ impl AminoAcid {
 
     /// Convert to a byte for the associated single-letter ident.
     pub fn to_u8_upper(&self) -> u8 {
+        use AminoAcid::*;
         match self {
-            Self::Arg => b'R',
-            Self::His => b'H',
-            Self::Lys => b'K',
-            Self::Asp => b'D',
-            Self::Glu => b'E',
-            Self::Ser => b'S',
-            Self::Thr => b'T',
-            Self::Asn => b'N',
-            Self::Gln => b'Q',
-            Self::Cys => b'C',
-            Self::Sec => b'U',
-            Self::Gly => b'G',
-            Self::Pro => b'P',
-            Self::Ala => b'A',
-            Self::Val => b'V',
-            Self::Ile => b'I',
-            Self::Leu => b'L',
-            Self::Met => b'M',
-            Self::Phe => b'F',
-            Self::Tyr => b'Y',
-            Self::Trp => b'W',
+            Arg => b'R',
+            His => b'H',
+            Lys => b'K',
+            Asp => b'D',
+            Glu => b'E',
+            Ser => b'S',
+            Thr => b'T',
+            Asn => b'N',
+            Gln => b'Q',
+            Cys => b'C',
+            Sec => b'U',
+            Gly => b'G',
+            Pro => b'P',
+            Ala => b'A',
+            Val => b'V',
+            Ile => b'I',
+            Leu => b'L',
+            Met => b'M',
+            Phe => b'F',
+            Tyr => b'Y',
+            Trp => b'W',
         }
     }
 
     /// Convert to a byte for the associated single-letter ident.
     pub fn to_u8_lower(&self) -> u8 {
+        use AminoAcid::*;
         match self {
-            Self::Arg => b'r',
-            Self::His => b'h',
-            Self::Lys => b'k',
-            Self::Asp => b'd',
-            Self::Glu => b'e',
-            Self::Ser => b's',
-            Self::Thr => b't',
-            Self::Asn => b'n',
-            Self::Gln => b'q',
-            Self::Cys => b'c',
-            Self::Sec => b'u',
-            Self::Gly => b'g',
-            Self::Pro => b'p',
-            Self::Ala => b'a',
-            Self::Val => b'v',
-            Self::Ile => b'i',
-            Self::Leu => b'l',
-            Self::Met => b'm',
-            Self::Phe => b'f',
-            Self::Tyr => b'y',
-            Self::Trp => b'w',
+            Arg => b'r',
+            His => b'h',
+            Lys => b'k',
+            Asp => b'd',
+            Glu => b'e',
+            Ser => b's',
+            Thr => b't',
+            Asn => b'n',
+            Gln => b'q',
+            Cys => b'c',
+            Sec => b'u',
+            Gly => b'g',
+            Pro => b'p',
+            Ala => b'a',
+            Val => b'v',
+            Ile => b'i',
+            Leu => b'l',
+            Met => b'm',
+            Phe => b'f',
+            Tyr => b'y',
+            Trp => b'w',
         }
     }
 
@@ -218,28 +222,29 @@ impl AminoAcid {
     /// Source: https://www.promega.com/resources/tools/amino-acid-chart-amino-acid-structure/
     /// todo: This table is not very precise; consider updating with a better source.
     pub fn weight(&self) -> f32 {
+        use AminoAcid::*;
         match self {
-            Self::Arg => 174.,
-            Self::His => 155.,
-            Self::Lys => 146.,
-            Self::Asp => 133.,
-            Self::Glu => 147.,
-            Self::Ser => 105.,
-            Self::Thr => 119.,
-            Self::Asn => 132.,
-            Self::Gln => 146.,
-            Self::Cys => 121.,
-            Self::Sec => 168.06,
-            Self::Gly => 75.,
-            Self::Pro => 115.,
-            Self::Ala => 89.,
-            Self::Val => 117.,
-            Self::Ile => 131.,
-            Self::Leu => 131.,
-            Self::Met => 149.,
-            Self::Phe => 165.,
-            Self::Tyr => 181.,
-            Self::Trp => 204.,
+            Arg => 174.,
+            His => 155.,
+            Lys => 146.,
+            Asp => 133.,
+            Glu => 147.,
+            Ser => 105.,
+            Thr => 119.,
+            Asn => 132.,
+            Gln => 146.,
+            Cys => 121.,
+            Sec => 168.06,
+            Gly => 75.,
+            Pro => 115.,
+            Ala => 89.,
+            Val => 117.,
+            Ile => 131.,
+            Leu => 131.,
+            Met => 149.,
+            Phe => 165.,
+            Tyr => 181.,
+            Trp => 204.,
         }
     }
 
@@ -288,74 +293,77 @@ impl AminoAcid {
     /// If a resulting codon has less than 3 nucleotides, it means the third can be any; this may have both conciseness,
     /// and performance advantages.
     pub fn codons(&self) -> Vec<Vec<Nucleotide>> {
+        use AminoAcid::*;
         match self {
-            Self::Ala => vec![vec![G, C]],
+            Ala => vec![vec![G, C]],
 
-            Self::Arg => vec![
+            Arg => vec![
                 vec![C, G],    // CGN
                 vec![A, G, A], // AGA
                 vec![A, G, G], // AGG
             ],
 
-            Self::Asn => vec![vec![A, A, T], vec![A, A, C]],
-            Self::Asp => vec![vec![G, A, T], vec![G, A, C]],
-            Self::Cys => vec![vec![T, G, T], vec![T, G, C]],
-            Self::Gln => vec![vec![C, A, G], vec![C, A, A]],
-            Self::Glu => vec![vec![G, A, A], vec![G, A, G]],
-            Self::Gly => vec![vec![G, G]],
+            Asn => vec![vec![A, A, T], vec![A, A, C]],
+            Asp => vec![vec![G, A, T], vec![G, A, C]],
+            Cys => vec![vec![T, G, T], vec![T, G, C]],
+            Gln => vec![vec![C, A, G], vec![C, A, A]],
+            Glu => vec![vec![G, A, A], vec![G, A, G]],
+            Gly => vec![vec![G, G]],
 
-            Self::His => vec![vec![C, A, C], vec![C, A, T]],
+            His => vec![vec![C, A, C], vec![C, A, T]],
 
-            Self::Ile => vec![vec![A, T, T], vec![A, T, C], vec![A, T, A]],
+            Ile => vec![vec![A, T, T], vec![A, T, C], vec![A, T, A]],
 
-            Self::Leu => vec![
+            Leu => vec![
                 vec![C, T],    // CTN
                 vec![T, T, A], // TTA
                 vec![T, T, G], // TTG
             ],
 
-            Self::Lys => vec![vec![A, A, A], vec![A, A, G]],
-            Self::Met => vec![vec![A, T, G]],
-            Self::Phe => vec![vec![T, T, T], vec![T, T, C]],
-            Self::Pro => vec![vec![C, C]],
+            Lys => vec![vec![A, A, A], vec![A, A, G]],
+            Met => vec![vec![A, T, G]],
+            Phe => vec![vec![T, T, T], vec![T, T, C]],
+            Pro => vec![vec![C, C]],
 
-            Self::Ser => vec![
+            Ser => vec![
                 vec![T, C],    // TCN
                 vec![A, G, T], // AGT
                 vec![A, G, C], // AGC
             ],
 
-            Self::Thr => vec![vec![A, C]],
-            Self::Trp => vec![vec![T, G, G]],
-            Self::Tyr => vec![vec![T, A, T], vec![T, A, C]],
-            Self::Val => vec![vec![G, T]],
-            Self::Sec => unimplemented!(),
+            Thr => vec![vec![A, C]],
+            Trp => vec![vec![T, G, G]],
+            Tyr => vec![vec![T, A, T], vec![T, A, C]],
+            Val => vec![vec![G, T]],
+            Sec => unimplemented!(),
         }
     }
 
     pub fn category(&self) -> AaCategory {
+        use AminoAcid::*;
+        
         match self {
-            Self::Arg => AaCategory::Basic,
-            Self::His => AaCategory::Basic,
-            Self::Lys => AaCategory::Basic,
-            Self::Asp => AaCategory::Acidic,
-            Self::Glu => AaCategory::Acidic,
-            Self::Ser => AaCategory::Polar, // is polar equiv to hydrophilic?
-            Self::Thr => AaCategory::Polar,
-            Self::Asn => AaCategory::Polar,
-            Self::Gln => AaCategory::Polar,
-            Self::Cys => AaCategory::Polar,
-            Self::Sec => AaCategory::Polar, // todo: unknown for now. placeholder
-            Self::Gly => AaCategory::Hydrophobic,
-            Self::Pro => AaCategory::Hydrophobic,
-            Self::Ala => AaCategory::Hydrophobic,
-            Self::Val => AaCategory::Hydrophobic,
-            Self::Ile => AaCategory::Hydrophobic,
-            Self::Leu => AaCategory::Hydrophobic,
-            Self::Met => AaCategory::Hydrophobic,
-            Self::Phe => AaCategory::Hydrophobic,
-            Self::Tyr => AaCategory::Polar,
-            Self::Trp => AaCategory::Hydrophobic, // Maybe no hydro. Mayb epolar or amphipathic?
+            Arg => AaCategory::Basic,
+            His => AaCategory::Basic,
+            Lys => AaCategory::Basic,
+            Asp => AaCategory::Acidic,
+            Glu => AaCategory::Acidic,
+            Ser => AaCategory::Polar, // is polar equiv to hydrophilic?
+            Thr => AaCategory::Polar,
+            Asn => AaCategory::Polar,
+            Gln => AaCategory::Polar,
+            Cys => AaCategory::Polar,
+            Sec => AaCategory::Polar, // todo: unknown for now. placeholder
+            Gly => AaCategory::Hydrophobic,
+            Pro => AaCategory::Hydrophobic,
+            Ala => AaCategory::Hydrophobic,
+            Val => AaCategory::Hydrophobic,
+            Ile => AaCategory::Hydrophobic,
+            Leu => AaCategory::Hydrophobic,
+            Met => AaCategory::Hydrophobic,
+            Phe => AaCategory::Hydrophobic,
+            Tyr => AaCategory::Polar,
+            Trp => AaCategory::Hydrophobic, // Maybe no hydro. Mayb epolar or amphipathic?
         }
     }
 }
@@ -469,19 +477,21 @@ impl FromStr for AminoAcidProtenationVariant {
 
 impl fmt::Display for AminoAcidProtenationVariant {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        use AminoAcidProtenationVariant::*;
+        
         let v = match self {
-            Self::Hid => "HID",
-            Self::Hie => "HIE",
-            Self::Hip => "HIP",
-            Self::Cym => "CYM",
-            Self::Cyx => "CYX",
-            Self::Ash => "ASH",
-            Self::Glh => "GLH",
-            Self::Lyn => "LYN",
-            Self::Ace => "ACE",
-            Self::Nhe => "NHE",
-            Self::Nme => "NME",
-            Self::Hyp => "HYP",
+            Hid => "HID",
+            Hie => "HIE",
+            Hip => "HIP",
+            Cym => "CYM",
+            Cyx => "CYX",
+            Ash => "ASH",
+            Glh => "GLH",
+            Lyn => "LYN",
+            Ace => "ACE",
+            Nhe => "NHE",
+            Nme => "NME",
+            Hyp => "HYP",
         };
 
         write!(f, "{v}")
@@ -491,13 +501,15 @@ impl fmt::Display for AminoAcidProtenationVariant {
 impl AminoAcidProtenationVariant {
     /// E.g. if Hid or Hie, get His. Returns None for the temrinal groups Ace and Nme.
     pub fn get_standard(&self) -> Option<AminoAcid> {
+        use AminoAcid::*;
+        
         match self {
-            Self::Hid | Self::Hie | Self::Hip | Self::Nhe => Some(AminoAcid::His),
-            Self::Cym | Self::Cyx => Some(AminoAcid::Cys),
-            Self::Ash => Some(AminoAcid::Asp),
-            Self::Glh => Some(AminoAcid::Glu),
-            Self::Lyn => Some(AminoAcid::Lys),
-            Self::Hyp => Some(AminoAcid::Pro),
+            Self::Hid | Self::Hie | Self::Hip | Self::Nhe => Some(His),
+            Self::Cym | Self::Cyx => Some(Cys),
+            Self::Ash => Some(Asp),
+            Self::Glh => Some(Glu),
+            Self::Lyn => Some(Lys),
+            Self::Hyp => Some(Pro),
             _ => None,
         }
     }
