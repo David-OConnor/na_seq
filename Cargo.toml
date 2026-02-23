@@ -1,16 +1,16 @@
 [package]
 name = "na_seq"
-version = "0.3.14"
+version = "0.3.15"
 edition = "2024"
 authors = ["David O'Connor <the_alchemist@fastmail.com>"]
 description = "DNA, RNA, and amino acid sequence types and functions"
 keywords = ["dna", "primer", "biology", "pcr"]
 categories = [
-    "science",
-    "science::bioinformatics",
     "science::bioinformatics::genomics",
     "science::bioinformatics::proteomics",
     "science::bioinformatics::sequence-analysis",
+    "science::computational-biology::structural-modeling",
+    "science::computational-chemistry::cheminformatics",
 ]
 repository = "https://github.com/David-OConnor/seq"
 documentation = "https://docs.rs/seq"
