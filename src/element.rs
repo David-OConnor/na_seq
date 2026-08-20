@@ -39,6 +39,7 @@ pub enum Element {
     Barium,
     Molybdenum,
     Boron,
+    Cobalt,
     Other,
 }
 
@@ -79,6 +80,7 @@ impl Element {
             "BA" => Ok(Barium),
             "MO" => Ok(Molybdenum),
             "B" => Ok(Boron),
+            "CO" => Ok(Cobalt),
             // todo: Fill in if you need, or remove this fn.
             _ => Err(io::Error::new(
                 ErrorKind::InvalidData,
@@ -123,6 +125,7 @@ impl Element {
             Barium => "Ba".into(),
             Molybdenum => "Mo".into(),
             Boron => "B".into(),
+            Cobalt => "Co".into(),
             Other => "X".into(),
         }
     }
@@ -163,7 +166,8 @@ impl Element {
             Barium => 2,
             Molybdenum => 6,
             Boron => 3,
-            Other => 0, // default to 0 for unknown or unhandled elements
+            Cobalt => 2, // Co(II) and Co(III) both common, pick 2
+            Other => 0,  // default to 0 for unknown or unhandled elements
         }
     }
 
@@ -200,6 +204,7 @@ impl Element {
             Rubidium => (0.439, 0.180, 0.690),
             Silicon => (1., 1., 1.),
             Sodium => (0.502, 0.502, 0.502),
+            Cobalt => (0.941, 0.565, 0.627),
             Other => (5., 5., 5.),
             _ => (5., 5., 5.),
         }
@@ -245,6 +250,7 @@ impl Element {
             Barium => 2.15,
             Molybdenum => 1.53,
             Boron => 0.84,
+            Cobalt => 1.26, // 1.50 for high-spin
             Other      => 0.00,
         }
     }
@@ -289,6 +295,7 @@ impl Element {
             Barium => 2.68,
             Molybdenum => 0.,// N/A?
             Boron => 1.92,
+            Cobalt => 2.00,
             Other      => 0.0,
         }
     }
@@ -329,6 +336,7 @@ impl Element {
             Barium => 56,
             Molybdenum => 42,
             Boron => 5,
+            Cobalt => 27,
             Other => 20, // fallback
         }
     }
@@ -351,6 +359,7 @@ impl Element {
             20 => Calcium,
             25 => Manganese,
             26 => Iron,
+            27 => Cobalt,
             29 => Copper,
             30 => Zinc,
             34 => Selenium,
@@ -410,6 +419,7 @@ impl Element {
             Barium => 137.327,
             Molybdenum => 95.95,
             Boron => 10.806,
+            Cobalt => 58.933,
             Other => 0.0, // fallback for unknowns
         }
     }
@@ -469,6 +479,7 @@ impl Element {
             Titanium => 4,
             Barium => 2,
             Molybdenum => 6,
+            Cobalt => 2, // Co(II) common, e.g. in cobalamin
 
             _ => 0,
         }
@@ -512,6 +523,7 @@ impl fmt::Display for Element {
             Barium => "Barium",
             Molybdenum => "Molybdenum",
             Boron => "Boron",
+            Cobalt => "Cobalt",
             Other => "Other",
         };
 
