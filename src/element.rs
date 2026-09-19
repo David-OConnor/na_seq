@@ -337,12 +337,13 @@ impl Element {
             Molybdenum => 42,
             Boron => 5,
             Cobalt => 27,
-            Other => 20, // fallback
+            Other => 0, // Sentinel for an unknown or unsupported element.
         }
     }
 
     pub fn from_atomic_number(num: u8) -> io::Result<Self> {
         Ok(match num {
+            0 => Other,
             1 => Hydrogen,
             5 => Boron,
             6 => Carbon,
