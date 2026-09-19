@@ -105,7 +105,7 @@ pub enum AminoAcid {
 impl AminoAcid {
     pub fn to_str(&self, ident: AaIdent) -> String {
         use AminoAcid::*;
-        
+
         match ident {
             AaIdent::OneLetter => match self {
                 Arg => "R",
@@ -341,7 +341,7 @@ impl AminoAcid {
 
     pub fn category(&self) -> AaCategory {
         use AminoAcid::*;
-        
+
         match self {
             Arg => AaCategory::Basic,
             His => AaCategory::Basic,
@@ -478,7 +478,7 @@ impl FromStr for AminoAcidProtenationVariant {
 impl fmt::Display for AminoAcidProtenationVariant {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         use AminoAcidProtenationVariant::*;
-        
+
         let v = match self {
             Hid => "HID",
             Hie => "HIE",
@@ -502,7 +502,7 @@ impl AminoAcidProtenationVariant {
     /// E.g. if Hid or Hie, get His. Returns None for the temrinal groups Ace and Nme.
     pub fn get_standard(&self) -> Option<AminoAcid> {
         use AminoAcid::*;
-        
+
         match self {
             Self::Hid | Self::Hie | Self::Hip | Self::Nhe => Some(His),
             Self::Cym | Self::Cyx => Some(Cys),
