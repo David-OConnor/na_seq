@@ -10,7 +10,9 @@ pub use crate::{
     element::{AtomTypeInRes, Element},
     nucleotide::{Nucleotide, NucleotideGeneral},
     restriction_enzyme::RestrictionEnzyme,
-    sequence::{SEQ_DESCRIPTION_KEY, SeqType, Sequence, SequenceData},
+    sequence::{
+        SEQ_DESCRIPTION_KEY, SeqFeature, SeqRange, SeqType, Sequence, SequenceData, Strand,
+    },
 };
 
 pub mod amino_acids;
