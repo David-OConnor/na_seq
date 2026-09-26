@@ -10,6 +10,7 @@ pub use crate::{
     element::{AtomTypeInRes, Element},
     nucleotide::{Nucleotide, NucleotideGeneral},
     restriction_enzyme::RestrictionEnzyme,
+    sequence::{SEQ_DESCRIPTION_KEY, SeqType, Sequence, SequenceData},
 };
 
 pub mod amino_acids;
@@ -18,6 +19,7 @@ pub mod ligation;
 pub mod nucleotide;
 pub mod re_lib;
 pub mod restriction_enzyme;
+pub mod sequence;
 
 // Index 0: 5' end.
 pub type Seq = Vec<Nucleotide>;

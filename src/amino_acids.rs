@@ -157,6 +157,41 @@ impl AminoAcid {
         .to_owned()
     }
 
+    /// From a single-letter ident byte, e.g. `b'R'` or `b'r'`. For interop with FASTA and similar
+    /// formats. Unlike [`FromStr`], this doesn't allocate, which matters for large files.
+    pub fn from_u8_letter(val: u8) -> io::Result<Self> {
+        use AminoAcid::*;
+        Ok(match val.to_ascii_uppercase() {
+            b'R' => Arg,
+            b'H' => His,
+            b'K' => Lys,
+            b'D' => Asp,
+            b'E' => Glu,
+            b'S' => Ser,
+            b'T' => Thr,
+            b'N' => Asn,
+            b'Q' => Gln,
+            b'C' => Cys,
+            b'U' => Sec,
+            b'G' => Gly,
+            b'P' => Pro,
+            b'A' => Ala,
+            b'V' => Val,
+            b'I' => Ile,
+            b'L' => Leu,
+            b'M' => Met,
+            b'F' => Phe,
+            b'Y' => Tyr,
+            b'W' => Trp,
+            _ => {
+                return Err(io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    "Invalid amino acid letter",
+                ));
+            }
+        })
+    }
+
     /// Convert to a byte for the associated single-letter ident.
     pub fn to_u8_upper(&self) -> u8 {
         use AminoAcid::*;
