@@ -179,7 +179,8 @@ impl Element {
             Oxygen => (1., 0.3, 0.3),
             Nitrogen => (0.2, 0.2, 1.0),
             Fluorine => (0.701, 1.0, 1.0),
-            Sulfur => (0.9, 0.775, 0.25),
+            // Jmol/Mol* sulfur yellow (#FFFF30).
+            Sulfur => (1.0, 1.0, 48.0 / 255.0),
             Phosphorus => (1.0, 0.502, 0.),
             Iron => (0.878, 0.4, 0.2),
             Copper => (0.784, 0.502, 0.2),
